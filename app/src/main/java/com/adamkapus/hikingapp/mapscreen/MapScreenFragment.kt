@@ -1,60 +1,144 @@
 package com.adamkapus.hikingapp.mapscreen
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.adamkapus.hikingapp.R
+import com.adamkapus.hikingapp.databinding.FragmentMapScreenBinding
+import com.adamkapus.hikingapp.utils.PermissionUtils.isPermissionGranted
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class MapScreenFragment : Fragment(), OnMapReadyCallback {
+    private lateinit var binding: FragmentMapScreenBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MapScreenFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MapScreenFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var map: GoogleMap? = null
+    private var permissionDenied = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+
+        private const val DEFAULT_LOCATION_LAT = 47.4733057775952
+        private const val DEFAULT_LOCATION_LNG = 19.059724793021967
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_screen, container, false)
+        binding = FragmentMapScreenBinding.inflate(layoutInflater)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MapScreenFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MapScreenFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+
+        binding.test.setOnClickListener {
+            displayGpx()
+        }
     }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        val defaultLocation = LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LNG)
+        map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
+
+        enableMyLocation()
+    }
+
+    private fun displayGpx() {
+
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun enableMyLocation() {
+
+        // Check if permissions are granted, if so, enable the my location layer
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+                requireContext(),
+                ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            map!!.isMyLocationEnabled = true
+            return
+        }
+
+        // If if a permission rationale dialog should be shown
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                ACCESS_FINE_LOCATION
+            ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                ACCESS_COARSE_LOCATION
+            )
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(), arrayOf(ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            return
+        }
+
+        // Otherwise, request permission
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                ACCESS_FINE_LOCATION,
+                ACCESS_COARSE_LOCATION
+            ),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            super.onRequestPermissionsResult(
+                requestCode,
+                permissions,
+                grantResults
+            )
+            return
+        }
+
+        if (isPermissionGranted(
+                permissions,
+                grantResults,
+                ACCESS_FINE_LOCATION
+            ) || isPermissionGranted(
+                permissions,
+                grantResults,
+                ACCESS_COARSE_LOCATION
+            )
+        ) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation()
+        } else {
+            permissionDenied = true
+        }
+    }
+
 }
