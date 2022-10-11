@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_map"
         android:title="@string/title_map" />
     <item
+        android:id="@+id/track"
+        android:icon="@drawable/ic_track"
+        android:title="@string/title_track" />
+    <item
         android:id="@+id/camera"
         android:icon="@drawable/ic_camera"
         android:title="@string/title_camera" />

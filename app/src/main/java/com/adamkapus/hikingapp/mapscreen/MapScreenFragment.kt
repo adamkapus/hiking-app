@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Polyline
+import com.google.android.gms.maps.model.PolylineOptions
 import io.ticofab.androidgpxparser.parser.GPXParser
 import io.ticofab.androidgpxparser.parser.domain.Extensions
 import io.ticofab.androidgpxparser.parser.domain.Gpx
@@ -115,6 +118,7 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
                     e.printStackTrace()
                 }
 
+                val route: MutableList<LatLng> = mutableListOf()
                 if (parsedGpx != null) {
                     // log stuff
                     val tracks: List<Track> = parsedGpx.tracks
@@ -126,6 +130,7 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
                             val segment = segments[j]
                             Log.d(TAG, "  segment $j:")
                             for (trackPoint in segment.trackPoints) {
+                                route.add(LatLng(trackPoint.latitude, trackPoint.longitude))
                                 var msg =
                                     "    point: lat " + trackPoint.latitude + ", lon " + trackPoint.longitude + ", time " + trackPoint.time
                                 val ext: Extensions? = trackPoint.extensions
@@ -138,12 +143,25 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
                             }
                         }
                     }
+
                 } else {
                     Log.e(TAG, "Error parsing gpx track!")
                 }
+                drawRouteOnMap(route)
             }
         }
 
+    }
+
+    private fun drawRouteOnMap(route: List<LatLng>) {
+        if (map != null) {
+            val polyline: Polyline = map!!.addPolyline(
+                PolylineOptions()
+                    //.width(40.0f)
+                    .color(Color.RED)
+            )
+            polyline.points = route
+        }
     }
 
     @SuppressLint("MissingPermission")
