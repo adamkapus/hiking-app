@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/authentication_nav_graph"
+    app:startDestination="@id/authentication_fragment">
+
+    <action
+        android:id="@+id/action_authenticationNavGraph_to_homeNavGraph"
+        app:destination="@id/home_nav_graph"
+        app:popUpTo="@id/authentication_nav_graph"
+        app:popUpToInclusive="true" />
+
+    <fragment
+        android:id="@+id/authentication_fragment"
+        android:name="com.adamkapus.hikingapp.ui.authentication.AuthenticationFragment"
+        android:label="AuthenticationScreenFragment" />
+</navigation>

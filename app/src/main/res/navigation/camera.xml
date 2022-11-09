@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/cameraScreenFragment"
-        android:name="com.adamkapus.hikingapp.camerascreen.CameraScreenFragment"
+        android:name="com.adamkapus.hikingapp.ui.camera.CameraScreenFragment"
         android:label="fragment_camera_screen"
         tools:layout="@layout/fragment_camera_screen" />
 </navigation>

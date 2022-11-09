@@ -8,5 +8,48 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_track">Track</string>
 
+    <string name="flower_name_default">Flower</string>
+    <string name="flower_name_snowdrop">Hóvirág</string>
+    <string name="flower_name_sunflower">Napraforgó</string>
+
+    <string name="lat_lng">Latitude: %1$s Longitude: %2$s</string>
+    <string name="view_picture">View picture</string>
+    <string name="description_refresh_map">Refresh map</string>
+    <string name="chechbox_common">Common</string>
+    <string name="checkbox_rare">Rare</string>
+    <string name="rarity_common">Gyakori</string>
+    <string name="rarity_rare">Ritka</string>
+    <string name="rarity_super_rare">Szuper ritka</string>
+    <string name="rarity_default">Ritkaság</string>
+    <string name="flower_name_dandelion">Pitypang</string>
+    <string name="flower_name_tulip">Tulipán</string>
+    <string name="flower_name_pansy">Árvácska</string>
+    <string name="flower_name_iris">Nőszirom</string>
+    <string name="flower_name_daisy">Százszorszép</string>
+    <string name="flower_name_crocus">Sáfrány</string>
+    <string name="flower_name_colts_foot">Martilapu</string>
+    <string name="flower_name_cowslip">Kankalin</string>
+    <string name="flower_name_buttercup">Boglárka</string>
+    <string name="flower_name_daffodil">Nárcisz</string>
+    <string name="flower_name_bluebell">Harangvirág</string>
+    <string name="flower_name_fritillary">Kockás liliom</string>
+    <string name="flower_name_lily_valley">Gyöngyvirág</string>
+    <string name="flower_name_tiger_lily">Tigrisliliom</string>
+    <string name="flower_name_windflower">Szellőrózsa</string>
+    <string name="login_inputs_email">Email</string>
+    <string name="login_inputs_password">Password</string>
+    <string name="login_buttons_login">Login</string>
+    <string name="authentication_pager_registration">Registration</string>
+    <string name="authentication_pager_login">Login</string>
+    <string name="registration_inputs_password_again">Password again</string>
+    <string name="registration_labels_password_hint">Password</string>
+    <string name="registration_buttons_next">Register</string>
+    <string name="authentication_failure_alert_invalid_email_format">Invalid email address!</string>
+    <string name="authentication_failure_alert_too_short_password">Too short password!</string>
+    <string name="authentication_failure_alert_unmatching_passwords">Not matching passwords!</string>
+    <string name="authentication_failure_alert_invalid_email_or_password">Invalid email or password!</string>
+    <string name="general_network_error_description">Network error occured</string>
+    <string name="login_buttons_next">Login</string>
+
 
 </resources>

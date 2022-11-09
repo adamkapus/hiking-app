@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="segmentedPickerPressedTrackPadding">2dp</dimen>
+    <dimen name="segmentedPickerTrackPadding">4dp</dimen>
+    <dimen name="segmentedPickerSegmentPadding">5dp</dimen>
+    <dimen name="segmentedPickerCornerSize">8dp</dimen>
+    <dimen name="segmentedPickerThumbCornerSize">4dp</dimen>
+
+</resources>

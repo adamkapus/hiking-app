@@ -9,6 +9,13 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE "/>
 
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+
     <application
         android:name=".HikingApplication"
         android:allowBackup="true"
@@ -32,7 +39,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".trackscreen.tracking.LocationService" android:foregroundServiceType="location" />
+
+        <service android:name=".ui.track.tracking.LocationService" android:foregroundServiceType="location" />
     </application>
 
 </manifest>

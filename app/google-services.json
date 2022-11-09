@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "456699159826",
+    "project_id": "szakdoga-fb8c9",
+    "storage_bucket": "szakdoga-fb8c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456699159826:android:063878a8c1f9ff42d9ffcb",
+        "android_client_info": {
+          "package_name": "com.adamkapus.hikingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456699159826-2apjne1manpntp4fqhfc01s0khfgaq56.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaBdavxDY7wszMsvjOMgorkbjuNSHoTYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456699159826-2apjne1manpntp4fqhfc01s0khfgaq56.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
