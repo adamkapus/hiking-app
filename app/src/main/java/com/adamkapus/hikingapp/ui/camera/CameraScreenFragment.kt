@@ -31,7 +31,7 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.model.Model
 import java.util.concurrent.Executors
 
-
+/*
 class CameraScreenFragment : Fragment() {
     private lateinit var binding: FragmentCameraScreenBinding
     private lateinit var submitButton: Button
@@ -302,4 +302,4 @@ class CameraScreenFragment : Fragment() {
         return binding.root;
     }
 
-}
+}*/

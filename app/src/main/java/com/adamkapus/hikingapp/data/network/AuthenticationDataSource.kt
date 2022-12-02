@@ -26,9 +26,6 @@ class AuthenticationDataSource {
                     continuation.resume(DataSourceResult(result = false)) {}
                 }
             }
-        /*.addOnFailureListener {
-            continuation.resume(DataSourceError) {}
-        }*/
     }
 
     suspend fun signOut(
@@ -41,6 +38,9 @@ class AuthenticationDataSource {
                 } else {
                     continuation.resume(DataSourceResult(result = false)) {}
                 }
+            }
+            .addOnFailureListener {
+                continuation.resume(DataSourceResult(result = false)) {}
             }
     }
 
@@ -67,5 +67,15 @@ class AuthenticationDataSource {
                     continuation.resume(DataSourceResult(result = false)) {}
                 }
             }
+    }
+
+    suspend fun isSignedIn(): DataSourceResponse<Boolean> {
+        val user = Firebase.auth.currentUser
+        return if (user == null) {
+            DataSourceResult(result = false)
+        } else {
+            DataSourceResult(result = true)
+        }
+
     }
 }

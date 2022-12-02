@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel : ViewModel() {
+class RegistrationViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState =
         MutableStateFlow<RegistrationUiState>(
@@ -139,13 +140,6 @@ class RegistrationViewModel : ViewModel() {
         _registrationFailedEvent.update { false }
     }
 }
-
-
-/*data class RegistrationFormReady(
-    val isRegistrationFormReady: Boolean,
-    val emailAddress: String,
-    val password: String
-)*/
 
 data class RegistrationFormIncorrect(
     val isRegistrationFormIncorrect: Boolean,

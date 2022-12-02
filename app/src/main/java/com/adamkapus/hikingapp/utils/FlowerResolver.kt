@@ -4,60 +4,60 @@ import com.adamkapus.hikingapp.R
 
 class FlowerResolver {
     private var flowerDisplayNameMap = HashMap<String, Int>() // [label név, res ID]
-    private var flowerRarityMap = HashMap<String, Rarity>() // [label név, Ritkaság]
+    private var flowerFlowerRarityMap = HashMap<String, FlowerRarity>() // [label név, Ritkaság]
 
     init {
         flowerDisplayNameMap["bluebell"] = R.string.flower_name_bluebell
-        flowerRarityMap["bluebell"] = Rarity.COMMON
+        flowerFlowerRarityMap["bluebell"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["buttercup"] = R.string.flower_name_buttercup
-        flowerRarityMap["buttercup"] = Rarity.COMMON
+        flowerFlowerRarityMap["buttercup"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["colts foot"] = R.string.flower_name_colts_foot
-        flowerRarityMap["colts foot"] = Rarity.COMMON
+        flowerFlowerRarityMap["colts foot"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["cowslip"] = R.string.flower_name_cowslip
-        flowerRarityMap["cowslip"] = Rarity.RARE
+        flowerFlowerRarityMap["cowslip"] = FlowerRarity.RARE
 
         flowerDisplayNameMap["crocus"] = R.string.flower_name_crocus
-        flowerRarityMap["crocus"] = Rarity.SUPER_RARE
+        flowerFlowerRarityMap["crocus"] = FlowerRarity.SUPER_RARE
 
         flowerDisplayNameMap["daffodil"] = R.string.flower_name_daffodil
-        flowerRarityMap["daffodil"] = Rarity.COMMON
+        flowerFlowerRarityMap["daffodil"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["daisy"] = R.string.flower_name_daisy
-        flowerRarityMap["daisy"] = Rarity.COMMON
+        flowerFlowerRarityMap["daisy"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["dandelion"] = R.string.flower_name_dandelion
-        flowerRarityMap["dandelion"] = Rarity.COMMON
+        flowerFlowerRarityMap["dandelion"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["fritillary"] = R.string.flower_name_fritillary
-        flowerRarityMap["fritillary"] = Rarity.SUPER_RARE
+        flowerFlowerRarityMap["fritillary"] = FlowerRarity.SUPER_RARE
 
         flowerDisplayNameMap["iris"] = R.string.flower_name_iris
-        flowerRarityMap["iris"] = Rarity.RARE
+        flowerFlowerRarityMap["iris"] = FlowerRarity.RARE
 
         flowerDisplayNameMap["lily valley"] = R.string.flower_name_lily_valley
-        flowerRarityMap["lily valley"] = Rarity.RARE
+        flowerFlowerRarityMap["lily valley"] = FlowerRarity.RARE
 
         flowerDisplayNameMap["pansy"] = R.string.flower_name_pansy
-        flowerRarityMap["pansy"] = Rarity.COMMON
+        flowerFlowerRarityMap["pansy"] = FlowerRarity.COMMON
 
         flowerDisplayNameMap["snowdrop"] = R.string.flower_name_snowdrop
-        flowerRarityMap["snowdrop"] = Rarity.SUPER_RARE
+        flowerFlowerRarityMap["snowdrop"] = FlowerRarity.SUPER_RARE
 
         flowerDisplayNameMap["sunflower"] = R.string.flower_name_sunflower
-        flowerRarityMap["sunflower"] = Rarity.RARE
+        flowerFlowerRarityMap["sunflower"] = FlowerRarity.RARE
 
         flowerDisplayNameMap["tiger lily"] = R.string.flower_name_tiger_lily
-        flowerRarityMap["tiger lily"] = Rarity.SUPER_RARE
+        flowerFlowerRarityMap["tiger lily"] = FlowerRarity.SUPER_RARE
 
 
         flowerDisplayNameMap["tulip"] = R.string.flower_name_tulip
-        flowerRarityMap["tulip"] = Rarity.RARE
+        flowerFlowerRarityMap["tulip"] = FlowerRarity.RARE
 
         flowerDisplayNameMap["windflower"] = R.string.flower_name_windflower
-        flowerRarityMap["windflower"] = Rarity.RARE
+        flowerFlowerRarityMap["windflower"] = FlowerRarity.RARE
 
     }
 
@@ -65,14 +65,14 @@ class FlowerResolver {
         return flowerDisplayNameMap[label] ?: R.string.flower_name_default
     }
 
-    fun getRarity(label: String?): Rarity {
-        return flowerRarityMap[label] ?: Rarity.COMMON
+    fun getRarity(label: String?): FlowerRarity {
+        return flowerFlowerRarityMap[label] ?: FlowerRarity.COMMON
     }
 
 
 }
 
-enum class Rarity {
+enum class FlowerRarity {
     COMMON,
     RARE,
     SUPER_RARE

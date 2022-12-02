@@ -1,29 +1,29 @@
 package com.adamkapus.hikingapp.domain.interactor.authentication
 
 import com.adamkapus.hikingapp.data.network.AuthenticationDataSource
-import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResponse
 import com.adamkapus.hikingapp.domain.model.authentication.HikingAppUser
 import com.adamkapus.hikingapp.domain.model.toInteractorResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AuthenticationInteractorImpl : AuthenticationInteractor {
+class AuthenticationInteractorImpl/* : AuthenticationInteractor*/ {
 
 
-    override suspend fun isSignedIn(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
-        //InteractorResult<Boolean>(result = true)
-        InteractorError
+    suspend fun isSignedIn(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
+        val dataSource = AuthenticationDataSource()
+        val response = dataSource.isSignedIn()
+        response.toInteractorResponse()
     }
 
-    override suspend fun getUserInformation(): InteractorResponse<HikingAppUser> =
+    suspend fun getUserInformation(): InteractorResponse<HikingAppUser> =
         withContext(Dispatchers.IO) {
             val dataSource = AuthenticationDataSource()
             val response = dataSource.getUserInfo()
             response.toInteractorResponse()
         }
 
-    override suspend fun signUp(
+    suspend fun signUp(
         emailAddress: String,
         password: String
     ): InteractorResponse<Boolean> =
@@ -33,13 +33,13 @@ class AuthenticationInteractorImpl : AuthenticationInteractor {
             response.toInteractorResponse()
         }
 
-    override suspend fun signOut(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
+    suspend fun signOut(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
         val dataSource = AuthenticationDataSource()
         val response = dataSource.signOut()
         response.toInteractorResponse()
     }
 
-    override suspend fun signIn(
+    suspend fun signIn(
         emailAddress: String,
         password: String
     ): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {

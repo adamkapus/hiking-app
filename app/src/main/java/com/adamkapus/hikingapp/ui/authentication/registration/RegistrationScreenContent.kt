@@ -117,7 +117,7 @@ fun RegistrationScreenContent(
                 )
         )
         Text(
-            text = stringResource(id = com.adamkapus.hikingapp.R.string.registration_labels_password_hint),
+            text = stringResource(id = com.adamkapus.hikingapp.R.string.login_labels_password_hint),
             style = MaterialTheme.hikingAppTypography.infoTextStyle,
             modifier = Modifier
                 .fillMaxWidth()

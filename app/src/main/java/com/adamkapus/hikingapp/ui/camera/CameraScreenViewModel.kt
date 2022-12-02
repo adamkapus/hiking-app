@@ -3,8 +3,9 @@ package com.adamkapus.hikingapp.ui.camera
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import javax.inject.Inject
 
-class CameraScreenViewModel : ViewModel() {
+class CameraScreenViewModel @Inject constructor() : ViewModel() {
     private val analysisRounds = 10 //hány kör predikciót használjunk
     private  val maxDisplayedRecognition = 5
 

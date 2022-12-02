@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow<SettingsUiState>(SettingsUiState.Initial)
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -44,7 +45,7 @@ class SettingsViewModel : ViewModel() {
                 if (response.result) {
                     _signOutSucceededEvent.update { true }
                 } else {
-                    _signOutFailedEvent.update { false }
+                    _signOutFailedEvent.update { true }
                 }
             }
             is InteractorError -> {

@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TrackScreenViewModel : ViewModel() {
+class TrackScreenViewModel @Inject constructor() : ViewModel() {
 
     private val _route = MutableLiveData<List<LatLng>>()
     val route: LiveData<List<LatLng>> = _route

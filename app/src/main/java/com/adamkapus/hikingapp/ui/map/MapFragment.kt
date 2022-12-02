@@ -1,11 +1,9 @@
 package com.adamkapus.hikingapp.ui.map
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,29 +12,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentMapScreenBinding
 import com.adamkapus.hikingapp.utils.MapUtils
-import com.adamkapus.hikingapp.utils.PermissionUtils.isPermissionGranted
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import io.ticofab.androidgpxparser.parser.GPXParser
-import io.ticofab.androidgpxparser.parser.domain.Extensions
-import io.ticofab.androidgpxparser.parser.domain.Gpx
-import io.ticofab.androidgpxparser.parser.domain.Track
-import io.ticofab.androidgpxparser.parser.domain.TrackSegment
-import org.xmlpull.v1.XmlPullParserException
-import java.io.IOException
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
-class MapScreenFragment : Fragment(), OnMapReadyCallback {
+@AndroidEntryPoint
+class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentMapScreenBinding
+
+    private val viewModel: MapViewModel by viewModels()
 
     private var map: GoogleMap? = null
     private var permissionDenied = false
@@ -44,7 +38,12 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
 
-        private const val PICK_GPX_FILE = 101
+        private val REQUIRED_PERMISSIONS =
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+
 
         private const val DEFAULT_LOCATION_LAT = 47.4733057775952
         private const val DEFAULT_LOCATION_LNG = 19.059724793021967
@@ -52,14 +51,30 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
         private const val TAG = "PLS"
     }
 
-    private val startForGPXFileResult =
+    private val gpxFileRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 intent?.data?.also { uri ->
-                    openGPXFile(uri)
+                    //openGPXFile(uri)
+                    gpxFileSelected(uri)
                 }
             }
+        }
+
+
+    private val locationPermissionRequest =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+                tryLoadingUserPosition()
+            } else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                tryLoadingUserPosition()
+            } else {
+                viewModel.onLocationPermissionsDenied()
+            }
+
         }
 
 
@@ -80,31 +95,80 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
         binding.test.setOnClickListener {
             askForGpxFile()
         }
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                render(it)
+            }
+        }
+    }
+
+    private fun render(uiState: MapUiState) {
+        when (uiState) {
+            is MapUiState.Initial -> {
+                Log.d("PLS", uiState.toString())
+            }
+            is MapUiState.RouteLoaded -> {
+                Log.d("PLS", uiState.toString())
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        val defaultLocation = LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LNG)
-        map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
+        //val defaultLocation = LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LNG)
+        //map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
 
-        enableMyLocation()
+        tryLoadingUserPosition()
+        //enableMyLocation()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun tryLoadingUserPosition() {
+        if (requireContext().hasLocationPermission()
+        ) {
+            map?.isMyLocationEnabled = true
+            map?.uiSettings?.isMyLocationButtonEnabled = true
+            viewModel.loadUserPosition()
+        } else {
+            locationPermissionRequest.launch(
+                REQUIRED_PERMISSIONS
+            )
+        }
     }
 
     private fun askForGpxFile() {
-
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/gpx+xml"
         }
-        startForGPXFileResult.launch(intent)
+        gpxFileRequest.launch(intent)
     }
 
+    private fun gpxFileSelected(uri: Uri) {
+        val contentResolver = context?.contentResolver
+        if (contentResolver != null) {
+            val inputStream = contentResolver.openInputStream(uri)
+            if (inputStream != null) {
+                viewModel.loadGpxFile(inputStream)
+            }
+        }
+    }
+
+    /*
     private fun openGPXFile(uri: Uri) {
         Log.d("TAG", uri.toString())
         val contentResolver = context?.contentResolver
         if (contentResolver != null) {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
+            val interactor = GpxInteractor()
+            val inputStream = contentResolver.openInputStream(uri)
+            if (inputStream != null) {
+                val route = interactor.parseFile(inputStream)
+                drawRouteOnMap(route)
+            }
+
+            /*contentResolver.openInputStream(uri)?.use { inputStream ->
                 val mParser = GPXParser()
                 var parsedGpx: Gpx? = null
                 try {
@@ -146,10 +210,11 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
                     Log.e(TAG, "Error parsing gpx track!")
                 }
                 drawRouteOnMap(route)
-            }
+            }*/
         }
 
     }
+    */
 
     private fun drawRouteOnMap(trackingPointList: List<LatLng>) {
         if (map != null) {
@@ -158,6 +223,7 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    /*
     @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
 
@@ -231,6 +297,6 @@ class MapScreenFragment : Fragment(), OnMapReadyCallback {
         } else {
             permissionDenied = true
         }
-    }
+    }*/
 
 }

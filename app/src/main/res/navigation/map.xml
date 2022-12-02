@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapScreenFragment"
-        android:name="com.adamkapus.hikingapp.ui.map.MapScreenFragment"
+        android:name="com.adamkapus.hikingapp.ui.map.MapFragment"
         android:label="fragment_map_screen"
         tools:layout="@layout/fragment_map_screen" />
 </navigation>

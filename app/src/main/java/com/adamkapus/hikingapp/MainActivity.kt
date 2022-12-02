@@ -25,9 +25,15 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = binding.bottomNav
         bottomNavigationView.setupWithNavController(navController)
 
+        val screensWithoutBottomNavBar: Set<Int> = setOf(
+            R.id.authentication_fragment,
+            R.id.splashFragment
+        )
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d("PLS", destination.toString())
-            if(destination.id == R.id.authentication_fragment) {
+            if (screensWithoutBottomNavBar.contains(destination.id)) {
+                Log.d("PLS", "NEM KENE LATSZODNOM")
                 bottomNavigationView.visibility = View.GONE
             } else {
                 bottomNavigationView.visibility = View.VISIBLE

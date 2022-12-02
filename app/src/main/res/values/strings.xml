@@ -50,6 +50,7 @@
     <string name="authentication_failure_alert_invalid_email_or_password">Invalid email or password!</string>
     <string name="general_network_error_description">Network error occured</string>
     <string name="login_buttons_next">Login</string>
+    <string name="login_labels_password_hint">Description</string>
 
 
 </resources>

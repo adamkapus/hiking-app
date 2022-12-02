@@ -44,8 +44,6 @@ fun AuthenticationScreen(
             onSegmentSelected = {
                 viewModel.switchTo(fromInt(segments.indexOf(it)))
             },
-            backgroundColor = MaterialTheme.hikingappColors.pink,
-            inactiveItemTextColor = MaterialTheme.hikingappColors.white,
             modifier = Modifier
                 .padding(
                     top = MaterialTheme.hikingAppDimens.gapNormal,
@@ -62,7 +60,6 @@ fun AuthenticationScreen(
                 LaunchedEffect(uiState) {
                     selectedSegment = segments[0]
                 }
-                //Todo screen analytics
                 RegistrationScreenContent(
                     onSuccessfulRegistration = onSuccessfulRegistration
                 )
@@ -71,7 +68,6 @@ fun AuthenticationScreen(
                 LaunchedEffect(uiState) {
                     selectedSegment = segments[1]
                 }
-                //Todo screen analytics
                 LoginScreenContent(
                     onSuccessfulLogin = onSuccessfulLogin
                 )

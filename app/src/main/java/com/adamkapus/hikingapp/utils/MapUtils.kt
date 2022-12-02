@@ -1,17 +1,17 @@
 package com.adamkapus.hikingapp.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Location
+import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.adamkapus.hikingapp.R
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.suspendCancellableCoroutine
 
 
 object MapUtils {
@@ -61,6 +61,9 @@ object MapUtils {
             CustomCap(BitmapDescriptorFactory.fromBitmap(yellowStarBitmap), 10f)
         ).color(Color.CYAN).width(12.0f).jointType(JointType.ROUND)//.pattern(pattern)
     }
+
+
+
 }
 
 /*
