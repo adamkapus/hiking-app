@@ -1,17 +1,19 @@
-package com.adamkapus.hikingapp.data
+package com.adamkapus.hikingapp.data.location
 
 import android.annotation.SuppressLint
 import android.location.Location
 import com.adamkapus.hikingapp.HikingApplication
+import com.adamkapus.hikingapp.HikingApplication.Companion.fusedLocationProviderClient
 import com.adamkapus.hikingapp.data.model.DataSourceResponse
 import com.adamkapus.hikingapp.data.model.DataSourceResult
+import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 
-class LocationDataSource {
-
-    private val fusedLocationProviderClient = HikingApplication.fusedLocationProviderClient
-
+class LocationDataSource @Inject constructor(
+    private val fusedLocationProviderClient: FusedLocationProviderClient
+) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @SuppressLint("MissingPermission")

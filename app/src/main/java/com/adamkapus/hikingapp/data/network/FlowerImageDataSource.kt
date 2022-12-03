@@ -13,10 +13,11 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.net.URLEncoder
 import java.util.*
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class FlowerImageDataSource {
+class FlowerImageDataSource @Inject constructor() {
 
 
     suspend fun submitFlowerImage(bitmap: Bitmap): DataSourceResponse<Uri> {

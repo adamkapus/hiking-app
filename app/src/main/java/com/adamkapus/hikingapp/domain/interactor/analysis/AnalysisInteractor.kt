@@ -4,8 +4,9 @@ import com.adamkapus.hikingapp.domain.model.InteractorResponse
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.ui.camera.Recognition
 import com.adamkapus.hikingapp.ui.camera.RecognitionSession
+import javax.inject.Inject
 
-class AnalysisInteractor {
+class AnalysisInteractor @Inject constructor() {
     fun calculateRecognitionSession(
         previousRecognitionSession: RecognitionSession,
         newRecognitions: List<Recognition>

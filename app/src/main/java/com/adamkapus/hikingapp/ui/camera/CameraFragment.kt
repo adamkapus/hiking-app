@@ -29,6 +29,7 @@ import com.adamkapus.hikingapp.databinding.FragmentCameraScreenBinding
 import com.adamkapus.hikingapp.ml.ConvModMeta
 import com.adamkapus.hikingapp.ui.camera.CameraScreenUIState.*
 import com.adamkapus.hikingapp.ui.camera.adapter.RecognitionAdapter
+import com.adamkapus.hikingapp.utils.FlowerResolver
 import com.adamkapus.hikingapp.utils.PermissionUtils.hasAllPermissions
 import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
 import com.adamkapus.hikingapp.utils.YuvToRgbConverter
@@ -39,9 +40,14 @@ import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.model.Model
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
+
+    @Inject
+    lateinit var flowerResolver: FlowerResolver
+
     private lateinit var binding: FragmentCameraScreenBinding
     private lateinit var adapter: RecognitionAdapter
     private lateinit var submitButton: Button
@@ -149,14 +155,14 @@ class CameraFragment : Fragment() {
             is RecognitionInProgress -> {
                 submitButton.isEnabled = false
                 startButton.isEnabled = false
-                adapter.submitList(uiState.recognitions)
+                updateList(uiState.recognitions)
                 //startRecognition()
             }
             is RecognitionFinished -> {
                 Log.d("PLS", "Recognitionfinishedstate-be lepve")
                 submitButton.isEnabled = true
                 startButton.isEnabled = true
-                adapter.submitList(uiState.recognitions)
+                updateList(uiState.recognitions)
                 takeImageThenStopRecognition()
             }
             is SubmissionInProgress -> {
@@ -177,6 +183,16 @@ class CameraFragment : Fragment() {
         adapter = RecognitionAdapter(requireContext())
         binding.recognitionResults.adapter = adapter
         binding.recognitionResults.itemAnimator = null
+    }
+
+    private fun updateList(recognitions: List<Recognition>) {
+        val displayableRecognitions = recognitions.map {
+            Recognition(
+                label = flowerResolver.getDisplayName(it.label),
+                confidence = it.confidence
+            )
+        }
+        adapter.submitList(displayableRecognitions)
     }
 
     private fun onStartButtonPressed() {

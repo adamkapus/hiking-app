@@ -1,8 +1,10 @@
 package com.adamkapus.hikingapp.utils
 
+import android.content.Context
 import com.adamkapus.hikingapp.R
+import javax.inject.Inject
 
-class FlowerResolver {
+class FlowerResolver @Inject constructor(val context: Context) {
     private var flowerDisplayNameMap = HashMap<String, Int>() // [label név, res ID]
     private var flowerFlowerRarityMap = HashMap<String, FlowerRarity>() // [label név, Ritkaság]
 
@@ -61,8 +63,9 @@ class FlowerResolver {
 
     }
 
-    fun getDisplayName(label: String?): Int {
-        return flowerDisplayNameMap[label] ?: R.string.flower_name_default
+    fun getDisplayName(label: String?): String {
+        val resId = flowerDisplayNameMap[label] ?: R.string.flower_name_default
+        return context.getString(resId)
     }
 
     fun getRarity(label: String?): FlowerRarity {

@@ -2,7 +2,7 @@ package com.adamkapus.hikingapp.ui.authentication.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractorImpl
+import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.ui.authentication.registration.AuthenticationFailureType
@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val authenticationInteractor: AuthenticationInteractor
+) : ViewModel() {
 
     private val _uiState =
         MutableStateFlow<LoginUiState>(
@@ -88,11 +90,12 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    //ToDo LOGIN!
     private suspend fun login(emailAddress: String, password: String) = viewModelScope.launch {
         _uiState.update { _ -> LoginUiState.LoginInProgress }
         //Reg...
-        val inter = AuthenticationInteractorImpl()
-        val response = inter.signUp(emailAddress, password)
+
+        val response = authenticationInteractor.signUp(emailAddress, password)
         when (response) {
             is InteractorResult -> {
                 val success = response.result

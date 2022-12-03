@@ -2,7 +2,7 @@ package com.adamkapus.hikingapp.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractorImpl
+import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor() : ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val authenticationInteractor: AuthenticationInteractor
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SettingsUiState>(SettingsUiState.Initial)
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
@@ -26,7 +28,7 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     val signOutFailedEvent = _signOutFailedEvent.asStateFlow()
 
     suspend fun loadUserInfo() = viewModelScope.launch {
-        val inter = AuthenticationInteractorImpl()
+        val inter = AuthenticationInteractor()
         val response = inter.getUserInformation()
         when (response) {
             is InteractorResult -> {
@@ -38,8 +40,7 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     }
 
     suspend fun trySigningOut() = viewModelScope.launch {
-        val inter = AuthenticationInteractorImpl()
-        val response = inter.signOut()
+        val response = authenticationInteractor.signOut()
         when (response) {
             is InteractorResult -> {
                 if (response.result) {

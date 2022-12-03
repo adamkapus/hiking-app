@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkapus.hikingapp.R
-import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractorImpl
+import com.adamkapus.hikingapp.domain.interactor.authentication.AuthenticationInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.utils.isNotNullOrBlank
@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegistrationViewModel @Inject constructor() : ViewModel() {
+class RegistrationViewModel @Inject constructor(
+    private val authenticationInteractor :AuthenticationInteractor
+) : ViewModel() {
 
     private val _uiState =
         MutableStateFlow<RegistrationUiState>(
@@ -101,8 +103,7 @@ class RegistrationViewModel @Inject constructor() : ViewModel() {
     private suspend fun register(emailAddress: String, password: String) = viewModelScope.launch {
         _uiState.update { _ -> RegistrationUiState.RegistrationInProgress }
         //Reg...
-        val inter = AuthenticationInteractorImpl()
-        val response = inter.signUp(emailAddress, password)
+        val response = authenticationInteractor.signUp(emailAddress, password)
         when (response) {
             is InteractorResult -> {
                 val success = response.result

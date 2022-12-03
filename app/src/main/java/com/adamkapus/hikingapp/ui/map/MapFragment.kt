@@ -4,35 +4,46 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentMapScreenBinding
+import com.adamkapus.hikingapp.ui.map.model.FlowerOnMap
+import com.adamkapus.hikingapp.utils.FlowerRarity
 import com.adamkapus.hikingapp.utils.MapUtils
 import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private lateinit var binding: FragmentMapScreenBinding
 
     private val viewModel: MapViewModel by viewModels()
 
     private var map: GoogleMap? = null
+    private var markers = HashMap<Marker, FlowerOnMap>()
+
     private var permissionDenied = false
 
     companion object {
@@ -92,9 +103,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
-        binding.test.setOnClickListener {
-            askForGpxFile()
-        }
+        setupButtons()
+        setupCheckboxes()
 
         lifecycleScope.launch {
             viewModel.uiState.collect {
@@ -107,21 +117,137 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         when (uiState) {
             is MapUiState.Initial -> {
                 Log.d("PLS", uiState.toString())
+                drawMarkersOnMap(uiState.flowers)
             }
             is MapUiState.RouteLoaded -> {
                 Log.d("PLS", uiState.toString())
+                drawMarkersOnMap(uiState.flowers)
             }
         }
     }
 
+    private fun setupButtons() {
+        binding.test.setOnClickListener {
+            askForGpxFile()
+        }
+
+        binding.load.setOnClickListener {
+            viewModel.loadFlowerLocations()
+        }
+    }
+
+    private fun setupCheckboxes() {
+        binding.checkboxCommon.setOnClickListener { view ->
+            if (view is CheckBox) onCheckBoxClick(
+                FlowerRarity.COMMON,
+                view.isChecked
+            )
+        }
+        binding.checkboxRare.setOnClickListener { view ->
+            if (view is CheckBox) onCheckBoxClick(
+                FlowerRarity.RARE,
+                view.isChecked
+            )
+        }
+        binding.checkboxSuperRare.setOnClickListener { view ->
+            if (view is CheckBox) onCheckBoxClick(
+                FlowerRarity.SUPER_RARE,
+                view.isChecked
+            )
+        }
+    }
+
+    private fun onCheckBoxClick(rarity: FlowerRarity, isChecked: Boolean) {
+        viewModel.onRarityVisibilityChanged(rarity, isChecked)
+    }
+
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        googleMap.setInfoWindowAdapter(FlowerInfoWindowAdapter())
+        googleMap.setOnInfoWindowClickListener(this)
 
         //val defaultLocation = LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LNG)
         //map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
 
         tryLoadingUserPosition()
         //enableMyLocation()
+    }
+
+    private fun drawMarkersOnMap(flowers: List<FlowerOnMap>) {
+        if (map == null) {
+            return
+        }
+        for (m in markers.keys) {
+            m.remove()
+        }
+        //a [marker, FlowerOnMap] hashmap-et töröljük
+        markers.clear()
+
+        for (f in flowers) {
+            val pos = LatLng(f.Lat!!.toDouble(), f.Lng!!.toDouble())
+            val icon: Int = when (f.rarity) {
+                FlowerRarity.COMMON -> R.drawable.ic_map_flower_common
+                FlowerRarity.RARE -> R.drawable.ic_map_flower_rare
+                FlowerRarity.SUPER_RARE -> R.drawable.ic_map_flower_super_rare
+                else -> {
+                    R.drawable.ic_map_flower_common
+                }
+            }
+
+            val marker = map!!.addMarker(
+                MarkerOptions().position(pos).title(f.name)
+                    .icon(BitmapDescriptorFactory.fromResource(icon))
+            )
+            if (marker != null) {
+                //betesszük a HashMap-be a markert és a FlowerOnMap-pé konvertált virágot
+                markers[marker] = f
+            }
+        }
+
+    }
+
+    //InfoWindow adapter az egyedi InfoWindowokért a térképen
+    internal inner class FlowerInfoWindowAdapter : GoogleMap.InfoWindowAdapter {
+
+        private val window: View = layoutInflater.inflate(R.layout.flower_info_window, null)
+
+        //ezt a függvényt akkor kéne megvalósítani, ha az infowindow tartalmát akarnánk csak felülírni, de mi a kinézetét is szeretnénk
+        override fun getInfoContents(marker: Marker): View? {
+            return null
+        }
+
+        override fun getInfoWindow(marker: Marker): View? {
+            render(marker, window)
+            return window
+        }
+
+        //beállítjuk az egyedi info window kinézetét
+        private fun render(marker: Marker, view: View) {
+            val title: String? = markers[marker]?.displayName
+            val titleUi = view.findViewById<TextView>(R.id.title)
+            titleUi.text = title
+
+            val snippetUi = view.findViewById<TextView>(R.id.snippet)
+            val lat = String.format("%.3f", markers[marker]?.Lat)
+            val lng = String.format("%.3f", markers[marker]?.Lng)
+            snippetUi.text = getString(R.string.lat_lng, lat, lng)
+
+            val viewImagetv = view.findViewById<TextView>(R.id.view_image_tv)
+            viewImagetv.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+        }
+
+    }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        val flowerName = markers[marker]?.displayName
+        val imageUrl = markers[marker]?.imageUrl
+        /*DialogFlowerImage.newInstance(flowerName, imageUrl).show(
+            supportFragmentManager, DialogFlowerImage::class.java.simpleName
+        )*/
+        //val action = FlowerImageFragmentDirections.(amount)
+        // v.findNavController().navigate(action
+        val action = MapFragmentDirections.actionMapFragmentToFlowerImageFragment()
+        findNavController().navigate(action)
     }
 
     @SuppressLint("MissingPermission")
@@ -156,147 +282,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    /*
-    private fun openGPXFile(uri: Uri) {
-        Log.d("TAG", uri.toString())
-        val contentResolver = context?.contentResolver
-        if (contentResolver != null) {
-            val interactor = GpxInteractor()
-            val inputStream = contentResolver.openInputStream(uri)
-            if (inputStream != null) {
-                val route = interactor.parseFile(inputStream)
-                drawRouteOnMap(route)
-            }
-
-            /*contentResolver.openInputStream(uri)?.use { inputStream ->
-                val mParser = GPXParser()
-                var parsedGpx: Gpx? = null
-                try {
-                    parsedGpx =
-                        mParser.parse(inputStream) // consider doing this on a background thread
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } catch (e: XmlPullParserException) {
-                    e.printStackTrace()
-                }
-
-                val route: MutableList<LatLng> = mutableListOf()
-                if (parsedGpx != null) {
-                    // log stuff
-                    val tracks: List<Track> = parsedGpx.tracks
-                    for (i in tracks.indices) {
-                        val track: Track = tracks[i]
-                        Log.d(TAG, "track $i:")
-                        val segments: List<TrackSegment> = track.getTrackSegments()
-                        for (j in segments.indices) {
-                            val segment = segments[j]
-                            Log.d(TAG, "  segment $j:")
-                            for (trackPoint in segment.trackPoints) {
-                                route.add(LatLng(trackPoint.latitude, trackPoint.longitude))
-                                var msg =
-                                    "    point: lat " + trackPoint.latitude + ", lon " + trackPoint.longitude + ", time " + trackPoint.time
-                                val ext: Extensions? = trackPoint.extensions
-                                var speed: Double
-                                if (ext != null) {
-                                    speed = ext.getSpeed()
-                                    msg = "$msg, speed $speed"
-                                }
-                                Log.d(TAG, msg)
-                            }
-                        }
-                    }
-
-                } else {
-                    Log.e(TAG, "Error parsing gpx track!")
-                }
-                drawRouteOnMap(route)
-            }*/
-        }
-
-    }
-    */
-
     private fun drawRouteOnMap(trackingPointList: List<LatLng>) {
         if (map != null) {
             //val route = Route(trackingPointList)
             MapUtils.addRouteToMap(requireContext(), map!!, trackingPointList)
         }
     }
-
-    /*
-    @SuppressLint("MissingPermission")
-    private fun enableMyLocation() {
-
-        // Check if permissions are granted, if so, enable the my location layer
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                requireContext(),
-                ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            map!!.isMyLocationEnabled = true
-            return
-        }
-
-        // If if a permission rationale dialog should be shown
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                ACCESS_FINE_LOCATION
-            ) || ActivityCompat.shouldShowRequestPermissionRationale(
-                requireActivity(),
-                ACCESS_COARSE_LOCATION
-            )
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf(ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-            return
-        }
-
-        // Otherwise, request permission
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                ACCESS_FINE_LOCATION,
-                ACCESS_COARSE_LOCATION
-            ),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            super.onRequestPermissionsResult(
-                requestCode,
-                permissions,
-                grantResults
-            )
-            return
-        }
-
-        if (isPermissionGranted(
-                permissions,
-                grantResults,
-                ACCESS_FINE_LOCATION
-            ) || isPermissionGranted(
-                permissions,
-                grantResults,
-                ACCESS_COARSE_LOCATION
-            )
-        ) {
-            // Enable the my location layer if the permission has been granted.
-            enableMyLocation()
-        } else {
-            permissionDenied = true
-        }
-    }*/
-
 }

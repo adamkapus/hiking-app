@@ -8,9 +8,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AuthenticationDataSource {
+class AuthenticationDataSource @Inject constructor() {
 
 
     suspend fun signUp(

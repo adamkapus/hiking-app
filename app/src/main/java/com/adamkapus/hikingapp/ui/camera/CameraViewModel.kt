@@ -9,6 +9,7 @@ import com.adamkapus.hikingapp.domain.interactor.camera.FlowerImageSubmissionInt
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.ui.camera.CameraScreenUIState.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CameraViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class CameraViewModel @Inject constructor(
+    private val flowerImageSubmissionInteractor: FlowerImageSubmissionInteractor,
+    private val analysisInteractor: AnalysisInteractor
+) : ViewModel() {
     companion object {
         private const val maxAnalysisRounds = 10 //hány kör predikciót használjunk
         private const val maxDisplayedRecognition = 5
@@ -36,8 +41,10 @@ class CameraViewModel @Inject constructor() : ViewModel() {
         if (_uiState.value is RecognitionFinished) {
             return
         }
-        val inter = AnalysisInteractor()
-        val resp = inter.calculateRecognitionSession(currentRecognitionSession, newRecognitions)
+        val resp = analysisInteractor.calculateRecognitionSession(
+            currentRecognitionSession,
+            newRecognitions
+        )
         when (resp) {
             is InteractorError -> {}
             is InteractorResult -> {
@@ -81,8 +88,10 @@ class CameraViewModel @Inject constructor() : ViewModel() {
     fun submitRecognition(image: Bitmap?) = viewModelScope.launch {
         Log.d("PLS", "Viewmodelben")
         _uiState.update { SubmissionInProgress }
-        val inter = FlowerImageSubmissionInteractor()
-        val resp = inter.submitFlowerImageWithLocation(image)
+        val resp = flowerImageSubmissionInteractor.submitFlowerImageWithLocation(
+            flowerName = currentRecognitionSession.currentRecognitionList.sortedByDescending { it.confidence }[0].label,
+            image = image
+        )
         Log.d("PLS", resp.toString())
         when (resp) {
             is InteractorError -> {

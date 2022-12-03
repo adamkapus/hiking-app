@@ -10,10 +10,11 @@ import io.ticofab.androidgpxparser.parser.domain.TrackSegment
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
+import javax.inject.Inject
 
 const val TAG = "GPX"
 
-class GpxInteractor {
+class GpxInteractor @Inject constructor() {
 
     //ToDo suspend
     suspend fun parseFile(inputStream: InputStream): MutableList<Coordinate> {

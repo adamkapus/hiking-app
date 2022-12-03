@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentAuthenticationBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthenticationFragment : Fragment() {
 
     private lateinit var binding: FragmentAuthenticationBinding

@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/camera"
-    app:startDestination="@id/cameraScreenFragment">
+    app:startDestination="@id/cameraFragment">
 
     <fragment
-        android:id="@+id/cameraScreenFragment"
+        android:id="@+id/cameraFragment"
         android:name="com.adamkapus.hikingapp.ui.camera.CameraFragment"
         android:label="fragment_camera_screen"
         tools:layout="@layout/fragment_camera_screen" />
