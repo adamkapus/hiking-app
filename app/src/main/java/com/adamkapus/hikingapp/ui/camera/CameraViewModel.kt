@@ -109,6 +109,17 @@ class CameraViewModel @Inject constructor(
 
 }
 
+//Egy felismerés - címke, valószínűség és százalékos forma
+data class Recognition(var label: String, var confidence: Float) {
+
+    override fun toString(): String {
+        return "$label / $probabilityString"
+    }
+
+    val probabilityString = String.format("%.1f%%", confidence * 100.0f)
+
+}
+
 data class RecognitionSession(
     var currentRecognitionList: List<Recognition>,
 

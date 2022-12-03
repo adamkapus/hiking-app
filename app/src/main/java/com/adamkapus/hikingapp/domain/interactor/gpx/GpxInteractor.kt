@@ -17,7 +17,7 @@ const val TAG = "GPX"
 class GpxInteractor @Inject constructor() {
 
     //ToDo suspend
-    suspend fun parseFile(inputStream: InputStream): MutableList<Coordinate> {
+    suspend fun parseGpxFile(inputStream: InputStream): MutableList<Coordinate> {
         val route: MutableList<Coordinate> = mutableListOf()
         inputStream.use { inputStream ->
             val mParser = GPXParser()

@@ -4,8 +4,6 @@
     <string name="title_camera">Camera</string>
     <string name="title_home">Home</string>
     <string name="title_map">Map</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_track">Track</string>
 
     <string name="flower_name_default">Flower</string>
@@ -15,7 +13,7 @@
     <string name="lat_lng">Latitude: %1$s Longitude: %2$s</string>
     <string name="view_picture">View picture</string>
     <string name="description_refresh_map">Refresh map</string>
-    <string name="chechbox_common">Common</string>
+    <string name="checkbox_common">Common</string>
     <string name="checkbox_rare">Rare</string>
     <string name="rarity_common">Gyakori</string>
     <string name="rarity_rare">Ritka</string>

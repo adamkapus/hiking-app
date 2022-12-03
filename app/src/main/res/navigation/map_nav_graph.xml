@@ -13,12 +13,6 @@
         <action
             android:id="@+id/action_mapFragment_to_flowerImageFragment"
             app:destination="@id/flowerImageFragment" >
-            <argument
-                android:name="flowerDisplayName"
-                android:defaultValue="@null" />
-            <argument
-                android:name="imageUrl"
-                android:defaultValue="@null" />
         </action>
     </fragment>
     <fragment

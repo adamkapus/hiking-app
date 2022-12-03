@@ -137,7 +137,7 @@ class MapViewModel @Inject constructor(
     */
     fun loadGpxFile(inputStream: InputStream) = viewModelScope.launch {
         val inter = GpxInteractor()
-        val resp = inter.parseFile(inputStream)
+        val resp = inter.parseGpxFile(inputStream)
         route.update { Route(null, null, resp) }
     }
 

@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TrackScreenFragment : Fragment(), OnMapReadyCallback {
+class TrackFragment : Fragment(), OnMapReadyCallback {
     /*ToDo DI*/
     private val viewModel = TrackScreenViewModel()
     private lateinit var binding: FragmentTrackScreenBinding

@@ -241,12 +241,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     override fun onInfoWindowClick(marker: Marker) {
         val flowerName = markers[marker]?.displayName
         val imageUrl = markers[marker]?.imageUrl
-        /*DialogFlowerImage.newInstance(flowerName, imageUrl).show(
-            supportFragmentManager, DialogFlowerImage::class.java.simpleName
-        )*/
-        //val action = FlowerImageFragmentDirections.(amount)
-        // v.findNavController().navigate(action
-        val action = MapFragmentDirections.actionMapFragmentToFlowerImageFragment()
+        val action =
+            MapFragmentDirections.actionMapFragmentToFlowerImageFragment(flowerName, imageUrl)
         findNavController().navigate(action)
     }
 
