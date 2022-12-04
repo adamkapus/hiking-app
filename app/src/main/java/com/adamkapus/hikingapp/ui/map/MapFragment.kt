@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentMapScreenBinding
+import com.adamkapus.hikingapp.domain.model.map.Route
 import com.adamkapus.hikingapp.ui.map.model.FlowerOnMap
 import com.adamkapus.hikingapp.utils.FlowerRarity
 import com.adamkapus.hikingapp.utils.MapUtils
@@ -43,6 +44,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     private var map: GoogleMap? = null
     private var markers = HashMap<Marker, FlowerOnMap>()
+    private var userRouteId: Int? = null
 
     private var permissionDenied = false
 
@@ -103,6 +105,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+        userRouteId = try {
+            arguments?.getString("userRouteId")
+                ?.toInt()
+        } catch (e: java.lang.NumberFormatException) {
+            null
+        }
+
+        Log.d("PLS", "MAPBEN A ROUITE ID: " + userRouteId.toString())
+
+
         setupButtons()
         setupCheckboxes()
 
@@ -122,6 +134,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             is MapUiState.RouteLoaded -> {
                 Log.d("PLS", uiState.toString())
                 drawMarkersOnMap(uiState.flowers)
+                drawRouteOnMap(uiState.route)
             }
         }
     }
@@ -170,6 +183,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         //map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
 
         tryLoadingUserPosition()
+        if (userRouteId != null) {
+            viewModel.loadUserRecordedRoute(userRouteId!!)
+        }
         //enableMyLocation()
     }
 
@@ -273,14 +289,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         if (contentResolver != null) {
             val inputStream = contentResolver.openInputStream(uri)
             if (inputStream != null) {
-                viewModel.loadGpxFile(inputStream)
+                viewModel.loadRouteFromGpxFile(inputStream)
             }
         }
     }
 
-    private fun drawRouteOnMap(trackingPointList: List<LatLng>) {
+    private fun drawRouteOnMap(route: Route) {
         if (map != null) {
             //val route = Route(trackingPointList)
+            val trackingPointList = route.points.map { LatLng(it.Lat, it.Lng) }
             MapUtils.addRouteToMap(requireContext(), map!!, trackingPointList)
         }
     }

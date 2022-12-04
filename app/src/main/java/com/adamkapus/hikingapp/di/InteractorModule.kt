@@ -1,5 +1,6 @@
 package com.adamkapus.hikingapp.di
 
+import com.adamkapus.hikingapp.data.disk.route.RouteDataSource
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDataSource
 import com.adamkapus.hikingapp.data.location.LocationDataSource
 import com.adamkapus.hikingapp.data.network.FlowerImageDataSource
@@ -67,7 +68,7 @@ object InteractorModule {
 
     @Singleton
     @Provides
-    fun getTrackingInteractor(trackingDataSource: TrackingDataSource): TrackingInteractor {
-        return TrackingInteractor(trackingDataSource)
+    fun getTrackingInteractor(trackingDataSource: TrackingDataSource, routeDataSource: RouteDataSource): TrackingInteractor {
+        return TrackingInteractor(trackingDataSource, routeDataSource)
     }
 }

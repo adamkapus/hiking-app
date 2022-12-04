@@ -5,9 +5,14 @@
     android:id="@+id/home_nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <action
+        android:id="@+id/action_homeNavGraph_to_MapFragment"
+        app:destination="@id/mapFragment" />
+
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.adamkapus.hikingapp.ui.dashboard.home.HomeFragment"
+        android:name="com.adamkapus.hikingapp.ui.list.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+
 </navigation>

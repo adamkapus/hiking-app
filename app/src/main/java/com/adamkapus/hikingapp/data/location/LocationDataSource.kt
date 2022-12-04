@@ -2,8 +2,6 @@ package com.adamkapus.hikingapp.data.location
 
 import android.annotation.SuppressLint
 import android.location.Location
-import com.adamkapus.hikingapp.HikingApplication
-import com.adamkapus.hikingapp.HikingApplication.Companion.fusedLocationProviderClient
 import com.adamkapus.hikingapp.data.model.DataSourceResponse
 import com.adamkapus.hikingapp.data.model.DataSourceResult
 import com.google.android.gms.location.FusedLocationProviderClient

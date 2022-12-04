@@ -1,5 +1,6 @@
 package com.adamkapus.hikingapp.ui.track
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adamkapus.hikingapp.databinding.FragmentTrackScreenBinding
 import com.adamkapus.hikingapp.ui.track.TrackUiState.*
+import com.adamkapus.hikingapp.ui.track.tracking.PlsService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -75,10 +77,10 @@ class TrackFragment : Fragment() {
             }
             SavingRouteFailed -> {}
             SavingRouteInProgress -> {
-                TODO()
+
             }
             SavingRouteSuccess -> {
-                TODO()
+
             }
 
         }
@@ -86,11 +88,26 @@ class TrackFragment : Fragment() {
 
     private fun onStartButtonPressed() {
         //start service
+        val intent = Intent(context, PlsService::class.java)
+        intent.action = PlsService.ACTION_START
+        activity?.startService(intent)
+        /*Intent(context, LocationService::class.java).apply {
+            action = LocationService.ACTION_START
+            context?.startService(this)
+        }*/
         viewModel.trackingStarted()
+        //startActivity(Intent(requireContext(), TrackActivity::class.java))
     }
 
     private fun onSaveButtonPressed() {
         //stop service
+        val intent = Intent(context, PlsService::class.java)
+        intent.action = PlsService.ACTION_STOP
+        activity?.startService(intent)
+        /*Intent(context, LocationService::class.java).apply {
+            action = LocationService.ACTION_STOP
+            context?.startService(this)
+        }*/
         viewModel.saveRoute()
     }
 

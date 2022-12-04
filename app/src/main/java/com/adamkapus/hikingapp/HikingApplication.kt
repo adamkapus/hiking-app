@@ -16,26 +16,20 @@ class HikingApplication : Application() {
 
         const val NOTIFICATION_CHANNEL_ID = "location"
 
-        @SuppressLint("StaticFieldLeak")
-        lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-            private set
-
     }
 
     @SuppressLint("VisibleForTests")
     override fun onCreate() {
         super.onCreate()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
+                "location",
                 "Location",
                 NotificationManager.IMPORTANCE_LOW
             )
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
     }
 
     /*@SuppressLint("VisibleForTests")

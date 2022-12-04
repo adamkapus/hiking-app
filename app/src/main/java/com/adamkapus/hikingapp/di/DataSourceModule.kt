@@ -1,6 +1,9 @@
 package com.adamkapus.hikingapp.di
 
 import android.content.SharedPreferences
+import com.adamkapus.hikingapp.data.disk.route.CoordinateDao
+import com.adamkapus.hikingapp.data.disk.route.RouteDao
+import com.adamkapus.hikingapp.data.disk.route.RouteDataSource
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDao
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDataSource
 import com.adamkapus.hikingapp.data.location.LocationDataSource
@@ -29,7 +32,7 @@ object DataSourceModule {
     }
 
     @Provides
-    fun getFlowerImageDataSource(flowerResolver: FlowerResolver): FlowerImageDataSource {
+    fun getFlowerImageDataSource(): FlowerImageDataSource {
         return FlowerImageDataSource()
     }
 
@@ -39,8 +42,16 @@ object DataSourceModule {
     }
 
     @Provides
-    fun getTrackingDataSource(trackingDao: TrackingDao, sharedPreferences : SharedPreferences): TrackingDataSource {
+    fun getTrackingDataSource(
+        trackingDao: TrackingDao,
+        sharedPreferences: SharedPreferences
+    ): TrackingDataSource {
         return TrackingDataSource(trackingDao, sharedPreferences)
+    }
+
+    @Provides
+    fun getRouteDataSource(routeDao: RouteDao, coordinateDao: CoordinateDao): RouteDataSource {
+        return RouteDataSource(routeDao, coordinateDao)
     }
 
 

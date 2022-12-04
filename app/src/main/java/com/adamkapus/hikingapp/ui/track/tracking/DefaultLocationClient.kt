@@ -15,26 +15,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
-
 class DefaultLocationClient(
     private val context: Context,
     private val client: FusedLocationProviderClient
-) : LocationClient {
-    private lateinit var locCallback: LocationCallback
+): LocationClient {
 
     @SuppressLint("MissingPermission")
     override fun getLocationUpdates(interval: Long): Flow<Location> {
         return callbackFlow {
-            if (!context.hasLocationPermission()) {
+            if(!context.hasLocationPermission()) {
                 throw LocationClient.LocationException("Missing location permission")
             }
 
-            val locationManager =
-                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-            val isNetworkEnabled =
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-            if (!isGpsEnabled && !isNetworkEnabled) {
+            val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+            if(!isGpsEnabled && !isNetworkEnabled) {
                 throw LocationClient.LocationException("GPS is disabled")
             }
 
@@ -42,7 +38,7 @@ class DefaultLocationClient(
                 .setInterval(interval)
                 .setFastestInterval(interval)
 
-            locCallback = object : LocationCallback() {
+            val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {
                     super.onLocationResult(result)
                     result.locations.lastOrNull()?.let { location ->
@@ -53,17 +49,13 @@ class DefaultLocationClient(
 
             client.requestLocationUpdates(
                 request,
-                locCallback,
+                locationCallback,
                 Looper.getMainLooper()
             )
 
             awaitClose {
-                client.removeLocationUpdates(locCallback)
+                client.removeLocationUpdates(locationCallback)
             }
         }
-    }
-
-    override fun stopLocationMonitoring() {
-        client.removeLocationUpdates(locCallback)
     }
 }

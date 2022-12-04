@@ -75,8 +75,18 @@ class TrackViewModel @Inject constructor(
     }
 
     fun saveRoute() = viewModelScope.launch {
+        _uiState.update { SavingRouteInProgress }
         Log.d("PLS", "track save")
-        trackingInteractor.stopTracking()
+        val resp = trackingInteractor.saveRoute()
+        when (resp) {
+            is InteractorError -> {
+                _uiState.update { SavingRouteFailed }
+            }
+            is InteractorResult -> {
+                _uiState.update { SavingRouteSuccess }
+            }
+        }
+        //ToDo remove
         _uiState.update { ReadyToStart }
     }
 

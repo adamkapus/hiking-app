@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.adamkapus.hikingapp.domain.interactor.gpx.GpxInteractor
 import com.adamkapus.hikingapp.domain.interactor.location.LocationInteractor
 import com.adamkapus.hikingapp.domain.interactor.map.FlowerLocationInteractor
+import com.adamkapus.hikingapp.domain.interactor.route.RouteInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.domain.model.map.Route
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val flowerResolver: FlowerResolver,
     private val locationInteractor: LocationInteractor,
-    private val flowerLocationInteractor: FlowerLocationInteractor
+    private val flowerLocationInteractor: FlowerLocationInteractor,
+    private val routeInteractor: RouteInteractor
 ) : ViewModel() {
     private val userPosition = MutableStateFlow<Location?>(null)
     private val flowerVisibilityState = MutableStateFlow(
@@ -135,10 +137,20 @@ class MapViewModel @Inject constructor(
         flowerVisibilityState.update { FlowerVisibiltyState(visibleCategories) }
     }
     */
-    fun loadGpxFile(inputStream: InputStream) = viewModelScope.launch {
+    fun loadRouteFromGpxFile(inputStream: InputStream) = viewModelScope.launch {
         val inter = GpxInteractor()
         val resp = inter.parseGpxFile(inputStream)
-        route.update { Route(null, null, resp) }
+        route.update { Route(null, "nevecske", resp) }
+    }
+
+    fun loadUserRecordedRoute(id: Int) = viewModelScope.launch {
+        val resp = routeInteractor.getRoute(id)
+        when (resp) {
+            is InteractorError -> {}
+            is InteractorResult -> {
+                route.update { resp.result }
+            }
+        }
     }
 
     //ToDo

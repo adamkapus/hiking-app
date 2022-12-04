@@ -1,8 +1,8 @@
 package com.adamkapus.hikingapp.domain.model.map
 
 data class Route(
-    val name: String?,
-    val description: String?,
+    val id : Int?,
+    val name: String,
     val points: List<Coordinate>
 
 )
