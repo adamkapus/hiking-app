@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TrackScreenViewModel @Inject constructor() : ViewModel() {
+class TrackViewModel @Inject constructor() : ViewModel() {
 
+    /*
     private val _route = MutableLiveData<List<LatLng>>()
     val route: LiveData<List<LatLng>> = _route
 
@@ -26,5 +27,5 @@ class TrackScreenViewModel @Inject constructor() : ViewModel() {
 
     fun clearRoute() = viewModelScope.launch {
         _route.postValue(mutableListOf())
-    }
+    }*/
 }

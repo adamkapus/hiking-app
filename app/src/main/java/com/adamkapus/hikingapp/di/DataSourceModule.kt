@@ -13,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+object DataSourceModule {
 
     @Provides
     fun getFlowerLocationDataSource(flowerResolver: FlowerResolver): FlowerLocationDataSource {
