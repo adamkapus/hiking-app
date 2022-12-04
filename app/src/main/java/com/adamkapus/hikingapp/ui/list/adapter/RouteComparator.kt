@@ -5,10 +5,10 @@ import com.adamkapus.hikingapp.domain.model.map.Route
 
 object RouteComparator : DiffUtil.ItemCallback<Route>() {
     override fun areItemsTheSame(oldItem: Route, newItem: Route): Boolean {
-        return oldItem.points == newItem.points && oldItem.name == newItem.name
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Route, newItem: Route): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 }

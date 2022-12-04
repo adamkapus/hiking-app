@@ -12,10 +12,20 @@ interface RouteDao {
     @Insert
     suspend fun insertRouteItem(routeItem: RouteItem): Long
 
-    @Query(
+    /*@Query(
         "SELECT * FROM routeitem" + " JOIN coordinateitem ON routeitem.id = coordinateitem.route_id"
     )
-    suspend fun getAllRouteItem(): Map<RouteItem, List<CoordinateItem>>
+    suspend fun getAllRouteItem(): Map<RouteItem, List<CoordinateItem>>*/
+
+    @Query(
+        "SELECT * FROM routeitem"
+    )
+    suspend fun getAllRouteItem(): List<RouteItem>
+
+    @Query(
+        "SELECT * FROM routeitem WHERE routeitem.id = :id"
+    )
+    suspend fun getRouteItem(id: Int): RouteItem
 
     /*@Query(
         "SELECT * FROM routeitem" + " JOIN coordinateitem ON routeitem.id = coordinateitem.route_id WHERE routeitem.id = :id"

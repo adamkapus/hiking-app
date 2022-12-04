@@ -68,8 +68,8 @@ class HomeFragment : Fragment() {
 
     private fun onItemClick(route: Route) {
         val bundle = bundleOf("userRouteId" to route.id.toString())
-        findNavController().setGraph(
-            R.navigation.map,
+        findNavController().navigate(
+            R.id.map,
             bundle
         )//navigate(R.id.action_homeNavGraph_to_MapFragment, bundle)
     }

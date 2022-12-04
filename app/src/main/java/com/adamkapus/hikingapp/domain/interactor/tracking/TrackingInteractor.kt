@@ -53,6 +53,10 @@ class TrackingInteractor @Inject constructor(
         )
     }
 
+    suspend fun removeTrackedLocations() = withContext(Dispatchers.IO){
+        trackingDataSource.deleteTrackedLocations()
+    }
+
     /*suspend fun getTrackedLocations() : DataList<TrackedLocation> = withContext(Dispatchers.IO) {
         trackingDataSource.getTrackedLocations()
     }*/

@@ -1,5 +1,6 @@
 package com.adamkapus.hikingapp.ui.list.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ class HomeAdapter() :
 
 
     fun replaceList(newList: List<Route>) {
+        Log.d("PLS", "NEWLIST ADAOTERBEN" + newList.toString())
         routeList = newList
         submitList(routeList)
     }

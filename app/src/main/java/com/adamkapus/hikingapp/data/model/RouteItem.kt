@@ -13,9 +13,9 @@ data class RouteItem(
 @Entity(tableName = "coordinateitem")
 data class CoordinateItem(
     @PrimaryKey(autoGenerate = true) val id: Int?,
-    val route_id : Long,
-    val lat : Double,
-    val lng : Double
+    val route_id: Long,
+    val lat: Double,
+    val lng: Double
 )
 
 /*
