@@ -1,33 +1,105 @@
 package com.adamkapus.hikingapp.ui.track
 
-import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
-import android.graphics.Color
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.adamkapus.hikingapp.R
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.adamkapus.hikingapp.databinding.FragmentTrackScreenBinding
-import com.adamkapus.hikingapp.ui.track.tracking.LocationService
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Polyline
-import com.google.android.gms.maps.model.PolylineOptions
+import com.adamkapus.hikingapp.ui.track.TrackUiState.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TrackFragment : Fragment(), OnMapReadyCallback {
+class TrackFragment : Fragment() {
+    private val viewModel: TrackViewModel by viewModels()
+    private lateinit var binding: FragmentTrackScreenBinding
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentTrackScreenBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.start.setOnClickListener {
+            onStartButtonPressed()
+        }
+
+        binding.save.setOnClickListener {
+            onSaveButtonPressed()
+        }
+
+        binding.cancel.setOnClickListener {
+            onCancelButtonPressed()
+        }
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect {
+                render(it)
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.initUiState()
+    }
+
+    private fun render(uiState: TrackUiState) {
+        Log.d("PLS", uiState.toString())
+        when (uiState) {
+            is Initial -> {
+                binding.start.isEnabled = false
+                binding.save.isEnabled = false
+                binding.cancel.isEnabled = false
+            }
+            ReadyToStart -> {
+                binding.start.isEnabled = true
+                binding.save.isEnabled = false
+                binding.cancel.isEnabled = false
+            }
+            TrackingInProgress -> {
+                binding.start.isEnabled = false
+                binding.save.isEnabled = true
+                binding.cancel.isEnabled = true
+            }
+            SavingRouteFailed -> {}
+            SavingRouteInProgress -> {
+                TODO()
+            }
+            SavingRouteSuccess -> {
+                TODO()
+            }
+
+        }
+    }
+
+    private fun onStartButtonPressed() {
+        //start service
+        viewModel.trackingStarted()
+    }
+
+    private fun onSaveButtonPressed() {
+        //stop service
+        viewModel.saveRoute()
+    }
+
+    private fun onCancelButtonPressed() {
+        viewModel.cancelTracking()
+    }
+    /*
     /*ToDo DI*/
-    private val viewModel = TrackScreenViewModel()
+    private val viewModel = TrackViewModel()
     private lateinit var binding: FragmentTrackScreenBinding
 
     private lateinit var map: GoogleMap
@@ -135,5 +207,5 @@ class TrackFragment : Fragment(), OnMapReadyCallback {
             )
             polyline.points = route
         }
-    }
+    }*/
 }

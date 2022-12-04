@@ -6,7 +6,7 @@ import com.adamkapus.hikingapp.domain.model.tracking.TrackedLocation
 
 @Entity(tableName = "trackedlocationitem")
 data class TrackedLocationItem(
-    @PrimaryKey(autoGenerate = true) val id: Double?,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
     val latitude: Double,
     val longitude: Double
 )

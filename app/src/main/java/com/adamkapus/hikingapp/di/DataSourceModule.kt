@@ -1,5 +1,8 @@
 package com.adamkapus.hikingapp.di
 
+import android.content.SharedPreferences
+import com.adamkapus.hikingapp.data.disk.tracking.TrackingDao
+import com.adamkapus.hikingapp.data.disk.tracking.TrackingDataSource
 import com.adamkapus.hikingapp.data.location.LocationDataSource
 import com.adamkapus.hikingapp.data.network.AuthenticationDataSource
 import com.adamkapus.hikingapp.data.network.FlowerImageDataSource
@@ -33,6 +36,11 @@ object DataSourceModule {
     @Provides
     fun getAuthenticationDataSource(): AuthenticationDataSource {
         return AuthenticationDataSource()
+    }
+
+    @Provides
+    fun getTrackingDataSource(trackingDao: TrackingDao, sharedPreferences : SharedPreferences): TrackingDataSource {
+        return TrackingDataSource(trackingDao, sharedPreferences)
     }
 
 

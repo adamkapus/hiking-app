@@ -1,5 +1,6 @@
 package com.adamkapus.hikingapp.di
 
+import com.adamkapus.hikingapp.data.disk.tracking.TrackingDataSource
 import com.adamkapus.hikingapp.data.location.LocationDataSource
 import com.adamkapus.hikingapp.data.network.FlowerImageDataSource
 import com.adamkapus.hikingapp.data.network.FlowerLocationDataSource
@@ -9,6 +10,7 @@ import com.adamkapus.hikingapp.domain.interactor.camera.FlowerImageSubmissionInt
 import com.adamkapus.hikingapp.domain.interactor.gpx.GpxInteractor
 import com.adamkapus.hikingapp.domain.interactor.location.LocationInteractor
 import com.adamkapus.hikingapp.domain.interactor.map.FlowerLocationInteractor
+import com.adamkapus.hikingapp.domain.interactor.tracking.TrackingInteractor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,5 +63,11 @@ object InteractorModule {
     @Provides
     fun getFlowerLocationInteractor(flowerLocationDataSource: FlowerLocationDataSource): FlowerLocationInteractor {
         return FlowerLocationInteractor(flowerLocationDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun getTrackingInteractor(trackingDataSource: TrackingDataSource): TrackingInteractor {
+        return TrackingInteractor(trackingDataSource)
     }
 }

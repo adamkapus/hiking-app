@@ -1,6 +1,8 @@
 package com.adamkapus.hikingapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import androidx.room.Room
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDao
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDatabase
@@ -28,5 +30,11 @@ object DatabaseModule {
             TrackingDatabase::class.java,
             "tracking_database"
         ).fallbackToDestructiveMigration().build()
+    }
+
+    @Provides
+    @Singleton
+    fun getSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
+        return getDefaultSharedPreferences(appContext)
     }
 }

@@ -27,7 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adamkapus.hikingapp.databinding.FragmentCameraScreenBinding
 import com.adamkapus.hikingapp.ml.ConvModMeta
-import com.adamkapus.hikingapp.ui.camera.CameraScreenUIState.*
+import com.adamkapus.hikingapp.ui.camera.CameraUIState.*
 import com.adamkapus.hikingapp.ui.camera.adapter.RecognitionAdapter
 import com.adamkapus.hikingapp.utils.FlowerResolver
 import com.adamkapus.hikingapp.utils.PermissionUtils.hasAllPermissions
@@ -146,7 +146,7 @@ class CameraFragment : Fragment() {
 
     }
 
-    private fun render(uiState: CameraScreenUIState) {
+    private fun render(uiState: CameraUIState) {
         when (uiState) {
             is ReadyForRecognition -> {
                 submitButton.isEnabled = false

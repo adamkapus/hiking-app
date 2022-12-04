@@ -8,7 +8,7 @@ import com.adamkapus.hikingapp.domain.interactor.analysis.AnalysisInteractor
 import com.adamkapus.hikingapp.domain.interactor.camera.FlowerImageSubmissionInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
-import com.adamkapus.hikingapp.ui.camera.CameraScreenUIState.*
+import com.adamkapus.hikingapp.ui.camera.CameraUIState.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,8 +30,8 @@ class CameraViewModel @Inject constructor(
 
     private lateinit var currentRecognitionSession: RecognitionSession
 
-    private val _uiState = MutableStateFlow<CameraScreenUIState>(ReadyForRecognition)
-    val uiState: StateFlow<CameraScreenUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<CameraUIState>(ReadyForRecognition)
+    val uiState: StateFlow<CameraUIState> = _uiState.asStateFlow()
 
     //Todo permission denied event, successful submission event
 
