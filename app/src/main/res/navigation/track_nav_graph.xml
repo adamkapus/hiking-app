@@ -9,5 +9,5 @@
         android:id="@+id/trackFragment"
         android:name="com.adamkapus.hikingapp.ui.track.TrackFragment"
         android:label="TrackScreenFragment"
-        tools:layout="@layout/fragment_track_screen" />
+        tools:layout="@layout/fragment_track" />
 </navigation>

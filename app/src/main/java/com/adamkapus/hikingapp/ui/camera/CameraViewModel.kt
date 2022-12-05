@@ -37,9 +37,9 @@ class CameraViewModel @Inject constructor(
 
 
     //ToDo error képernyő
-    fun onRecognitionMade(newRecognitions: List<Recognition>) {
+    fun onRecognitionMade(newRecognitions: List<Recognition>) = viewModelScope.launch {
         if (_uiState.value is RecognitionFinished) {
-            return
+            return@launch
         }
         val resp = analysisInteractor.calculateRecognitionSession(
             currentRecognitionSession,

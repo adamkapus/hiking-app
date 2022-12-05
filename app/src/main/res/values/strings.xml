@@ -50,5 +50,12 @@
     <string name="login_buttons_next">Login</string>
     <string name="login_labels_password_hint">Description</string>
 
+    <string name="permission_location_tracking_reasoning">Location permission is needed for location tracking</string>
+    <string name="permission_location_submitting_reasoning">Location permission is needed for adding images location</string>
+    <string name="permission_camera_reasoning">Camera permission is needed for image analysis</string>
+
+    <string name="track_saving_route_success">Saving route was successful</string>
+    <string name="track_saving_route_failed">Saving route failed</string>
+
 
 </resources>

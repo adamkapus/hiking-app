@@ -1,6 +1,5 @@
 package com.adamkapus.hikingapp.ui.track
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkapus.hikingapp.domain.interactor.tracking.TrackingInteractor
@@ -20,36 +19,16 @@ class TrackViewModel @Inject constructor(
     private val trackingInteractor: TrackingInteractor
 ) : ViewModel() {
 
-    /*
-    private val _route = MutableLiveData<List<LatLng>>()
-    val route: LiveData<List<LatLng>> = _route
-
-    fun addRoute(newRoute: List<Location>) = viewModelScope.launch {
-        val route: MutableList<LatLng> = mutableListOf()
-        for (location in newRoute) {
-            route.add(LatLng(location.latitude, location.longitude))
-        }
-        _route.postValue(route)
-    }
-
-    fun clearRoute() = viewModelScope.launch {
-        _route.postValue(mutableListOf())
-    }*/
-
     private val _uiState = MutableStateFlow<TrackUiState>(Initial)
     val uiState: StateFlow<TrackUiState> = _uiState.asStateFlow()
 
-
-    //ToDo onpermission denied event
-
     fun initUiState() = viewModelScope.launch {
-        val resp = trackingInteractor.isTrackingInProgress()
-        when (resp) {
+        when (val response = trackingInteractor.isTrackingInProgress()) {
             is InteractorError -> {
                 _uiState.update { ReadyToStart }
             }
             is InteractorResult -> {
-                if (resp.result) {
+                if (response.result) {
                     _uiState.update {
                         TrackingInProgress
                     }
@@ -63,22 +42,18 @@ class TrackViewModel @Inject constructor(
     }
 
     fun trackingStarted() = viewModelScope.launch {
-        Log.d("PLS", "track start")
         trackingInteractor.startTracking()
         _uiState.update { TrackingInProgress }
     }
 
     fun cancelTracking() = viewModelScope.launch {
-        Log.d("PLS", "track cancel")
-        trackingInteractor.stopTracking()
+        trackingInteractor.cancelTracking()
         _uiState.update { ReadyToStart }
     }
 
-    fun saveRoute() = viewModelScope.launch {
+    fun saveRoute(name : String) = viewModelScope.launch {
         _uiState.update { SavingRouteInProgress }
-        Log.d("PLS", "track save")
-        val resp = trackingInteractor.saveRoute()
-        when (resp) {
+        when (trackingInteractor.saveRoute(name)) {
             is InteractorError -> {
                 _uiState.update { SavingRouteFailed }
             }
@@ -86,20 +61,15 @@ class TrackViewModel @Inject constructor(
                 _uiState.update { SavingRouteSuccess }
             }
         }
-        //ToDo remove
+    }
+
+
+    fun handledTrackingFailed() = viewModelScope.launch {
         _uiState.update { ReadyToStart }
     }
 
-    fun onPermissionDenied() = viewModelScope.launch {
-
-    }
-
-    fun handledTrackingFailed() = viewModelScope.launch {
-
-    }
-
     fun handledTrackingSuccess() = viewModelScope.launch {
-
+        _uiState.update { ReadyToStart }
     }
 
 }

@@ -4,13 +4,15 @@ import com.adamkapus.hikingapp.domain.model.InteractorResponse
 import com.adamkapus.hikingapp.domain.model.InteractorResult
 import com.adamkapus.hikingapp.ui.camera.Recognition
 import com.adamkapus.hikingapp.ui.camera.RecognitionSession
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AnalysisInteractor @Inject constructor() {
-    fun calculateRecognitionSession(
+    suspend fun calculateRecognitionSession(
         previousRecognitionSession: RecognitionSession,
         newRecognitions: List<Recognition>
-    ): InteractorResponse<RecognitionSession> {
+    ): InteractorResponse<RecognitionSession> = withContext(Dispatchers.IO) {
         val newNumberOfAnalysisRoundsDone =
             previousRecognitionSession.numberOfAnalysisRoundsDone + 1
         val cumulatedRecognitions = previousRecognitionSession.cumulatedRecognitions.toMutableList()
@@ -32,7 +34,7 @@ class AnalysisInteractor @Inject constructor() {
             )
         }.toMutableList())
 
-        return InteractorResult(
+        InteractorResult(
             RecognitionSession(
                 currentRecognitionList = currentRecognitionList,
                 cumulatedRecognitions = cumulatedRecognitions,

@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <Button
-        android:id="@+id/startt"
+        android:id="@+id/trackStartButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start"
@@ -14,20 +15,28 @@
 
 
     <Button
-        android:id="@+id/savet"
+        android:id="@+id/trackSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/cancelt"
-        app:layout_constraintRight_toLeftOf="@id/startt" />
+        app:layout_constraintLeft_toRightOf="@id/trackCancelButton"
+        app:layout_constraintRight_toLeftOf="@id/trackStartButton" />
 
     <Button
-        android:id="@+id/cancelt"
+        android:id="@+id/trackCancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="cancel"
+        android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <EditText
+        android:id="@+id/trackName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/trackSaveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

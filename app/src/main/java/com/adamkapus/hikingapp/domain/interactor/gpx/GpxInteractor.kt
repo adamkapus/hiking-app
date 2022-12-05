@@ -7,6 +7,8 @@ import io.ticofab.androidgpxparser.parser.domain.Extensions
 import io.ticofab.androidgpxparser.parser.domain.Gpx
 import io.ticofab.androidgpxparser.parser.domain.Track
 import io.ticofab.androidgpxparser.parser.domain.TrackSegment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
@@ -17,13 +19,13 @@ const val TAG = "GPX"
 class GpxInteractor @Inject constructor() {
 
     //ToDo suspend
-    suspend fun parseGpxFile(inputStream: InputStream): MutableList<Coordinate> {
+    suspend fun parseGpxFile(inputStream: InputStream): MutableList<Coordinate> = withContext(Dispatchers.IO) {
         val route: MutableList<Coordinate> = mutableListOf()
         inputStream.use { inputStream ->
-            val mParser = GPXParser()
+            val parser = GPXParser()
             var parsedGpx: Gpx? = null
             try {
-                parsedGpx = mParser.parse(inputStream) // consider doing this on a background thread
+                parsedGpx = parser.parse(inputStream) // consider doing this on a background thread
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: XmlPullParserException) {
@@ -60,6 +62,6 @@ class GpxInteractor @Inject constructor() {
             }
 
         }
-        return route
+        route
     }
 }

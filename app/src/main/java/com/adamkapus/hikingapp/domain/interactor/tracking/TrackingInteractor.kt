@@ -25,13 +25,13 @@ class TrackingInteractor @Inject constructor(
         trackingDataSource.startTracking()
     }
 
-    suspend fun stopTracking() = withContext(Dispatchers.IO) {
+    suspend fun cancelTracking() = withContext(Dispatchers.IO) {
         trackingDataSource.stopTracking()
+        trackingDataSource.deleteTrackedLocations()
     }
 
     suspend fun isTrackingInProgress(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
-        val resp = trackingDataSource.isTrackingInProgress()
-        when (resp) {
+        when (val resp = trackingDataSource.isTrackingInProgress()) {
             is DataSourceError -> {
                 InteractorResult(false)
             }
@@ -53,21 +53,23 @@ class TrackingInteractor @Inject constructor(
         )
     }
 
-    suspend fun removeTrackedLocations() = withContext(Dispatchers.IO){
+    /*suspend fun removeTrackedLocations() = withContext(Dispatchers.IO){
         trackingDataSource.deleteTrackedLocations()
-    }
+    }*/
 
     /*suspend fun getTrackedLocations() : DataList<TrackedLocation> = withContext(Dispatchers.IO) {
         trackingDataSource.getTrackedLocations()
     }*/
 
-    suspend fun saveRoute(): InteractorResponse<Unit> =
+    suspend fun saveRoute(name: String): InteractorResponse<Unit> =
         withContext(Dispatchers.IO) {
             val trackedLocations = trackingDataSource.getTrackedLocations()
             val coordinateList = trackedLocations.map { Coordinate(it.latitude, it.longitude) }
-            val r = Route(id = null, name = "nev", points = coordinateList)
+            val r = Route(id = null, name = name, points = coordinateList)
             Log.d("PLS", r.toString())
             routeDataSource.insertRoute(r)
+            trackingDataSource.stopTracking()
+            trackingDataSource.deleteTrackedLocations()
             InteractorResult(Unit)
         }
 }
