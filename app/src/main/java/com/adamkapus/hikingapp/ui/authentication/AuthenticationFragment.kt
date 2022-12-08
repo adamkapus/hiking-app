@@ -22,19 +22,22 @@ class AuthenticationFragment : Fragment() {
     ): View {
         binding = FragmentAuthenticationBinding.inflate(layoutInflater)
         binding.authenticationScreenComposable.apply {
-            // Dispose of the Composition when the view's LifecycleOwner
-            // is destroyed
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
             setContent {
                 AuthenticationScreen(
-                    onSuccessfulRegistration = { findNavController().navigate(R.id.action_authenticationNavGraph_to_homeNavGraph) },
-                    onSuccessfulLogin = { findNavController().navigate(R.id.action_authenticationNavGraph_to_homeNavGraph) }
+                    onSuccessfulRegistration = {
+                        findNavController()
+                            .navigate(R.id.action_authenticationNavGraph_to_homeNavGraph)
+                    },
+                    onSuccessfulLogin = {
+                        findNavController()
+                            .navigate(R.id.action_authenticationNavGraph_to_homeNavGraph)
+                    }
                 )
-                //DashBoard()
             }
         }
-
-        // Inflate the layout for this fragment
         return binding.root
     }
 }

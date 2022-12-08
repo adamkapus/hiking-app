@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentTrackBinding
 import com.adamkapus.hikingapp.ui.track.TrackUiState.*
-import com.adamkapus.hikingapp.ui.track.tracking.PlsService
+import com.adamkapus.hikingapp.ui.track.tracking.TrackService
 import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
 import com.adamkapus.hikingapp.utils.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,10 +85,6 @@ class TrackFragment : Fragment() {
                 render(it)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
         viewModel.initUiState()
     }
 
@@ -113,33 +109,32 @@ class TrackFragment : Fragment() {
                 showSnackbar(R.string.track_saving_route_failed)
                 viewModel.handledTrackingFailed()
             }
-            SavingRouteInProgress -> {
-
-            }
             SavingRouteSuccess -> {
                 showSnackbar(R.string.track_saving_route_success)
                 viewModel.handledTrackingSuccess()
             }
+            SavingRouteInProgress -> {
 
+            }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
     }
 
     private fun onStartButtonPressed() {
         if (context?.hasLocationPermission() == true) {
-            val intent = Intent(context, PlsService::class.java)
-            intent.action = PlsService.ACTION_START
-            activity?.startService(intent)
+            startService()
             viewModel.trackingStarted()
         } else {
             locationPermissionRequest.launch(REQUIRED_PERMISSIONS)
         }
-
     }
 
     private fun onSaveButtonPressed() {
-        val intent = Intent(context, PlsService::class.java)
-        intent.action = PlsService.ACTION_STOP
-        activity?.startService(intent)
+        stopService()
         val name = trackName.text.toString().ifEmpty {
             "Route"
         }
@@ -147,9 +142,19 @@ class TrackFragment : Fragment() {
     }
 
     private fun onCancelButtonPressed() {
-        val intent = Intent(context, PlsService::class.java)
-        intent.action = PlsService.ACTION_STOP
-        activity?.startService(intent)
+        stopService()
         viewModel.cancelTracking()
+    }
+
+    private fun startService() {
+        val intent = Intent(context, TrackService::class.java)
+        intent.action = TrackService.ACTION_START
+        activity?.startService(intent)
+    }
+
+    private fun stopService() {
+        val intent = Intent(context, TrackService::class.java)
+        intent.action = TrackService.ACTION_STOP
+        activity?.startService(intent)
     }
 }

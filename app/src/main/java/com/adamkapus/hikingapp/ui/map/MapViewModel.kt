@@ -1,7 +1,6 @@
 package com.adamkapus.hikingapp.ui.map
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkapus.hikingapp.domain.interactor.gpx.GpxInteractor
@@ -31,27 +30,14 @@ class MapViewModel @Inject constructor(
     private val routeInteractor: RouteInteractor
 ) : ViewModel() {
     private val userPosition = MutableStateFlow<Location?>(null)
-    private val flowerVisibilityState = MutableStateFlow(
-        FlowerVisibiltyState(
-            emptySet()
+    private val flowerVisibilityState =
+        MutableStateFlow(
+            FlowerVisibiltyState(
+                emptySet()
+            )
         )
-    )
-    private val allFlowers = MutableStateFlow<List<FlowerOnMap>>(listOf())
-    /*private val visibleFlowerLocations = combine(
-        flowerVisibilityState,
-        allFlowerLocations
-    ) { flowerVisibilityState, allFlowerLocations ->
-        allFlowerLocations.filter {
-            if (it.rarity == null) {
-                false
-            } else {
-                flowerVisibilityState.visibleCategories.contains(FlowerRarity.valueOf(it.rarity))
-            }
-        }
-    }.stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(), initialValue = listOf()
-    )*/
-
+    private val allFlowers =
+        MutableStateFlow<List<FlowerOnMap>>(listOf())
     private val route = MutableStateFlow<Route?>(null)
 
 
@@ -89,19 +75,11 @@ class MapViewModel @Inject constructor(
         )
     )
 
-    private val _locationPermissionsDeniedEvent = MutableStateFlow(false)
-    val locationPermissionsDeniedEvent = _locationPermissionsDeniedEvent.asStateFlow()
-
-    //fun on
-
     fun loadUserPosition() = viewModelScope.launch {
-        Log.d("PLS", "loaduserpositions")
-        val resp = locationInteractor.getLastLocation()
-        Log.d("PLS", "resp" + resp.toString())
-        when (resp) {
+        when (val response = locationInteractor.getLastLocation()) {
             is InteractorResult -> {
-                if (resp.result != null) {
-                    userPosition.update { resp.result }
+                if (response.result != null) {
+                    userPosition.update { response.result }
                 }
             }
             is InteractorError -> {}
@@ -132,15 +110,10 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    /*
-    fun onFlowerLocationStateChanged(visibleCategories: Set<FlowerRarity>) {
-        flowerVisibilityState.update { FlowerVisibiltyState(visibleCategories) }
-    }
-    */
     fun loadRouteFromGpxFile(inputStream: InputStream) = viewModelScope.launch {
         val inter = GpxInteractor()
         val resp = inter.parseGpxFile(inputStream)
-        route.update { Route(null, "nevecske", resp) }
+        route.update { Route(null, "Route", resp) }
     }
 
     fun loadUserRecordedRoute(id: Int) = viewModelScope.launch {

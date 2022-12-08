@@ -14,14 +14,20 @@ sealed class MapUiState(
         val flowers: List<FlowerOnMap>,
         val userPosition: Location?
     ) :
-        MapUiState(flowerVisibilityState = flowerVisibilityState, flowers = flowers)
+        MapUiState(
+            flowerVisibilityState = flowerVisibilityState,
+            flowers = flowers
+        )
 
     data class RouteLoaded(
         val flowerVisibilityState: FlowerVisibiltyState,
         val flowers: List<FlowerOnMap>,
         val route: Route
     ) :
-        MapUiState(flowerVisibilityState = flowerVisibilityState, flowers = flowers)
+        MapUiState(
+            flowerVisibilityState = flowerVisibilityState,
+            flowers = flowers
+        )
 }
 
 

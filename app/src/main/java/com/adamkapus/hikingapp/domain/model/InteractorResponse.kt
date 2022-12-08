@@ -16,5 +16,4 @@ fun <T> DataSourceResponse<T>.toInteractorResponse() = when (this) {
 }
 
 private fun <T> DataSourceResult<T>.toInteractorResult() = InteractorResult(result)
-
 private fun DataSourceError.toInteractorError() = InteractorError
