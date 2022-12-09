@@ -46,10 +46,10 @@ fun SegmentedDemo() {
                 segments = twoSegments,
                 selectedSegment = selectedTwoSegment,
                 onSegmentSelected = { selectedTwoSegment = it },
-                backgroundColor = colorResource(id = R.color.dark_blue),
+                backgroundColor = colorResource(id = R.color.primaryDarkColor),
                 activeItemBackgroundColor = colorResource(id = R.color.white),
-                activeItemTextColor = colorResource(id = R.color.black),
-                inactiveItemTextColor = colorResource(id = R.color.white),
+                activeItemTextColor = colorResource(id = R.color.primaryTextColor),
+                inactiveItemTextColor = colorResource(id = R.color.primaryTextColor),
             )
 
             val threeSegments = remember { listOf("Foo", "Bar", "Some very long string") }
@@ -73,7 +73,7 @@ fun SegmentedPicker(
     selectedSegment: String,
     onSegmentSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colorResource(id = R.color.dark_blue),
+    backgroundColor: Color = colorResource(id = R.color.primaryDarkColor),
     activeItemBackgroundColor: Color = colorResource(id = R.color.white),
     activeItemTextColor: Color = colorResource(id = R.color.black),
     inactiveItemTextColor: Color = colorResource(id = R.color.white)

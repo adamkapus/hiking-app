@@ -27,7 +27,7 @@ fun AuthenticationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.hikingappColors.grey01),
+            .background(MaterialTheme.hikingappColors.white),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val titles = listOf(

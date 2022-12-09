@@ -28,16 +28,16 @@ fun HikingappTextField(
     onPasswordVisibilityChangeListener: () -> Unit = {}
 ) {
 
-    val skinsoluteTextFieldColors = TextFieldDefaults.textFieldColors(
-        leadingIconColor = MaterialTheme.hikingappColors.grey04,
-        trailingIconColor = MaterialTheme.hikingappColors.grey03,
-        focusedLabelColor = MaterialTheme.hikingappColors.grey04,
-        textColor = MaterialTheme.hikingappColors.fakeBlack,
+    val hikingAppTextFieldColors = TextFieldDefaults.textFieldColors(
+        leadingIconColor = MaterialTheme.hikingappColors.primaryTextColor,
+        trailingIconColor = MaterialTheme.hikingappColors.primaryTextColor,
+        focusedLabelColor = MaterialTheme.hikingappColors.primaryTextColor,
+        textColor = MaterialTheme.hikingappColors.primaryTextColor,
         backgroundColor = MaterialTheme.hikingappColors.transparent,
         focusedIndicatorColor = MaterialTheme.hikingappColors.transparent,
         unfocusedIndicatorColor = MaterialTheme.hikingappColors.transparent,
         disabledIndicatorColor = MaterialTheme.hikingappColors.transparent,
-        cursorColor = MaterialTheme.hikingappColors.pink
+        cursorColor = MaterialTheme.hikingappColors.primaryColor
     )
     if (!isPassword) {
         TextField(
@@ -48,8 +48,8 @@ fun HikingappTextField(
             leadingIcon = { Icon(painter = painterResource(id = leadingIcon), contentDescription = null) },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(MaterialTheme.hikingAppDimens.minSkinsoluteTextFieldHeight),
-            colors = skinsoluteTextFieldColors,
+                .heightIn(MaterialTheme.hikingAppDimens.inputMinHeight),
+            colors = hikingAppTextFieldColors,
             textStyle = MaterialTheme.hikingAppTypography.hikingAppTextFieldTextStyle,
             keyboardOptions = KeyboardOptions(keyboardType = keyBoardType)
         )
@@ -62,8 +62,8 @@ fun HikingappTextField(
             leadingIcon = { Icon(painter = painterResource(id = leadingIcon), contentDescription = null) },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(MaterialTheme.hikingAppDimens.minSkinsoluteTextFieldHeight),
-            colors = skinsoluteTextFieldColors,
+                .heightIn(MaterialTheme.hikingAppDimens.inputMinHeight),
+            colors = hikingAppTextFieldColors,
             textStyle = MaterialTheme.hikingAppTypography.hikingAppTextFieldTextStyle,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = keyBoardType),

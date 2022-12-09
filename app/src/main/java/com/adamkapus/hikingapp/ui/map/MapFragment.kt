@@ -26,6 +26,7 @@ import com.adamkapus.hikingapp.ui.map.model.FlowerOnMap
 import com.adamkapus.hikingapp.utils.FlowerRarity
 import com.adamkapus.hikingapp.utils.MapUtils
 import com.adamkapus.hikingapp.utils.hasLocationPermission
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -123,6 +124,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
                 render(it)
             }
         }
+
+        viewModel.loadFlowerLocations()
     }
 
     private fun render(uiState: MapUiState) {
@@ -130,11 +133,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             is MapUiState.Initial -> {
                 Log.d("PLS", uiState.toString())
                 drawMarkersOnMap(uiState.flowers)
+                val location = uiState.userPosition?.let { LatLng(it.latitude, it.longitude) }
+                moveCamera(location)
             }
             is MapUiState.RouteLoaded -> {
                 Log.d("PLS", uiState.toString())
                 drawMarkersOnMap(uiState.flowers)
                 drawRouteOnMap(uiState.route)
+                val location = uiState.route.points.firstOrNull()?.let { LatLng(it.Lat, it.Lng) }
+                moveCamera(location)
             }
         }
     }
@@ -144,9 +151,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             askForGpxFile()
         }
 
-        binding.load.setOnClickListener {
-            viewModel.loadFlowerLocations()
+    }
+
+    private fun moveCamera(location: LatLng?) {
+        if (location == null || map == null) {
+            return
         }
+        map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15.0f))
     }
 
     private fun setupCheckboxes() {
@@ -179,14 +190,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
         googleMap.setInfoWindowAdapter(FlowerInfoWindowAdapter())
         googleMap.setOnInfoWindowClickListener(this)
 
-        //val defaultLocation = LatLng(DEFAULT_LOCATION_LAT, DEFAULT_LOCATION_LNG)
-        //map!!.moveCamera(CameraUpdateFactory.newLatLng(defaultLocation))
-
         tryLoadingUserPosition()
         if (userRouteId != null) {
             viewModel.loadUserRecordedRoute(userRouteId!!)
         }
-        //enableMyLocation()
     }
 
     private fun drawMarkersOnMap(flowers: List<FlowerOnMap>) {
@@ -296,7 +303,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
 
     private fun drawRouteOnMap(route: Route) {
         if (map != null) {
-            //val route = Route(trackingPointList)
             val trackingPointList = route.points.map { LatLng(it.Lat, it.Lng) }
             MapUtils.addRouteToMap(requireContext(), map!!, trackingPointList)
         }

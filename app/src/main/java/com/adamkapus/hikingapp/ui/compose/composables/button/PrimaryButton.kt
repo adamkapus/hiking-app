@@ -28,8 +28,8 @@ fun PrimaryButton(
             end = MaterialTheme.hikingAppDimens.gapNormal
         ),
         buttonColors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.hikingappColors.blue,
-            disabledBackgroundColor = MaterialTheme.hikingappColors.midBlue
+            backgroundColor = MaterialTheme.hikingappColors.primaryColor,
+            disabledBackgroundColor = MaterialTheme.hikingappColors.primaryDarkColor
         ),
         shape = RoundedCornerShape(MaterialTheme.hikingAppDimens.primaryButtonCornerSize),
         enabled = enabled
@@ -42,7 +42,7 @@ fun PrimaryButton(
 }
 
 @Composable
-fun PrimaryWhiteButton(
+fun PrimaryDarkButton(
     onClickListener: () -> Unit,
     enabled: Boolean,
     text: String,
@@ -55,43 +55,15 @@ fun PrimaryWhiteButton(
             end = MaterialTheme.hikingAppDimens.gapNormal
         ),
         buttonColors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.hikingappColors.white,
-            disabledBackgroundColor = MaterialTheme.hikingappColors.white
+            backgroundColor = MaterialTheme.hikingappColors.primaryDarkColor,
+            disabledBackgroundColor = MaterialTheme.hikingappColors.primaryDarkColor
         ),
         shape = RoundedCornerShape(MaterialTheme.hikingAppDimens.primaryButtonCornerSize),
         enabled = enabled
     ) {
         Text(
             text = text,
-            style = MaterialTheme.hikingAppTypography.primaryWhiteButtonTextStyle
+            style = MaterialTheme.hikingAppTypography.primaryDarkButtonTextStyle
         )
-    }
-}
-
-@Preview(name = "PrimaryButton enabled", showBackground = true)
-@Composable
-fun PrimaryButtonEnabledPreview() {
-    PrimaryButton(onClickListener = {}, enabled = true, text = "Short")
-}
-
-@Preview(name = "PrimaryButton disabled", showBackground = true)
-@Composable
-fun PrimaryButtonDisabledPreview() {
-    PrimaryButton(onClickListener = {}, enabled = false, text = "Loooong text")
-}
-
-@Preview(name = "PrimaryWhiteButton enabled", showBackground = true)
-@Composable
-fun PrimaryWhiteButtonEnabledPreview() {
-    Surface(color = Color.Black) {
-        PrimaryWhiteButton(onClickListener = {}, enabled = true, text = "Short")
-    }
-}
-
-@Preview(name = "PrimaryWhiteButton disabled", showBackground = true)
-@Composable
-fun PrimaryWhiteButtonDisabledPreview() {
-    Surface(color = Color.Black) {
-        PrimaryWhiteButton(onClickListener = {}, enabled = false, text = "Loooong text")
     }
 }

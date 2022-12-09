@@ -6,4 +6,6 @@
     <dimen name="segmentedPickerCornerSize">8dp</dimen>
     <dimen name="segmentedPickerThumbCornerSize">4dp</dimen>
 
+    <dimen name="defaultLayoutMargin">18dp</dimen>
+
 </resources>

@@ -59,7 +59,7 @@ fun LoginScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.hikingappColors.grey01),
+            .background(MaterialTheme.hikingappColors.white),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ItemGroup(
@@ -103,7 +103,7 @@ fun LoginScreenContent(
                 )
         )
         Text(
-            text = stringResource(id = R.string.login_labels_password_hint),
+            text = "Login with your credentials",
             style = MaterialTheme.hikingAppTypography.infoTextStyle,
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,7 +138,6 @@ fun LoginScreenContent(
         if (loginFormIncorrect.isLoginFormIncorrect) {
             LaunchedEffect(loginFormIncorrect.isLoginFormIncorrect) {
                 viewModel.handledLoginFormIncorrectEvent()
-                Toast.makeText(context, "Hibas form", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -146,7 +145,6 @@ fun LoginScreenContent(
         if (loginSucceeded) {
             LaunchedEffect(loginSucceeded) {
                 viewModel.handledLoginSucceededEvent()
-                Toast.makeText(context, "Hibas form", Toast.LENGTH_SHORT).show()
                 onSuccessfulLogin()
             }
         }
@@ -155,7 +153,6 @@ fun LoginScreenContent(
         if (loginFailed) {
             LaunchedEffect(loginFailed) {
                 viewModel.handledLoginFailedEvent()
-                Toast.makeText(context, "login hiba", Toast.LENGTH_SHORT).show()
             }
         }
 

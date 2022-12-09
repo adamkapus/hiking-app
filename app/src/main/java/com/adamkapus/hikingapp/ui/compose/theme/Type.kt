@@ -5,21 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import com.adamkapus.hikingapp.R
-
-/*val Noto = FontFamily(
-    Font(R.font.noto_sans, FontWeight.Normal),
-    Font(R.font.noto_sans_semi_bold, FontWeight.SemiBold)
-)
-
-val Typography = androidx.compose.material.Typography(
-    defaultFontFamily = Noto
-)*/
 
 data class HikingAppTypography(
 
@@ -34,21 +22,26 @@ data class HikingAppTypography(
     ),
     val primaryButtonTextStyle: TextStyle = TextStyle(
         fontSize = 16.sp,
-        color = HikingAppColors().white,
+        color = HikingAppColors().primaryTextColor,
         letterSpacing = 0.sp
     ),
-    val primaryWhiteButtonTextStyle: TextStyle = TextStyle(
+    val primaryDarkButtonTextStyle: TextStyle = TextStyle(
         fontSize = 16.sp,
-        color = HikingAppColors().fakeBlack,
+        color = HikingAppColors().primaryTextColor,
         letterSpacing = 0.sp
     ),
     val infoTextStyle: TextStyle = TextStyle(
         fontSize = 14.sp,
-        color = HikingAppColors().grey04,
+        color = HikingAppColors().primaryTextColor,
+        textAlign = TextAlign.Center
+    ),
+    val infoTextStyleLarge: TextStyle = TextStyle(
+        fontSize = 25.sp,
+        color = HikingAppColors().primaryTextColor,
         textAlign = TextAlign.Center
     ),
 
-)
+    )
 
 val LocalTypography = staticCompositionLocalOf { HikingAppTypography() }
 

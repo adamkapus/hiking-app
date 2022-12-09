@@ -24,13 +24,13 @@ fun ItemGroup(
             .fillMaxWidth()
             .wrapContentHeight()
             .heightIn(MaterialTheme.hikingAppDimens.inputMinHeight)
-            .background(MaterialTheme.hikingappColors.white)
+            .background(MaterialTheme.hikingappColors.primaryLightColor)
     ) {
         for ((i, item) in itemList.withIndex()) {
             item()
             if (i != itemList.lastIndex) {
                 Divider(
-                    color = MaterialTheme.hikingappColors.grey01,
+                    color = MaterialTheme.hikingappColors.primaryTextColor,
                     thickness = MaterialTheme.hikingAppDimens.dividerHeight
                 )
             }

@@ -21,6 +21,7 @@ import com.adamkapus.hikingapp.ui.compose.composables.textfield.PasswordTextFiel
 import com.adamkapus.hikingapp.ui.compose.theme.hikingAppDimens
 import com.adamkapus.hikingapp.ui.compose.theme.hikingAppTypography
 import com.adamkapus.hikingapp.ui.compose.theme.hikingappColors
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -59,7 +60,7 @@ fun RegistrationScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.hikingappColors.grey01),
+            .background(MaterialTheme.hikingappColors.white),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ItemGroup(
@@ -117,7 +118,7 @@ fun RegistrationScreenContent(
                 )
         )
         Text(
-            text = stringResource(id = com.adamkapus.hikingapp.R.string.login_labels_password_hint),
+            text = "Register with a strong password to use the app",
             style = MaterialTheme.hikingAppTypography.infoTextStyle,
             modifier = Modifier
                 .fillMaxWidth()
@@ -153,14 +154,12 @@ fun RegistrationScreenContent(
         if (registrationFormIncorrectEvent.isRegistrationFormIncorrect) {
             LaunchedEffect(registrationFormIncorrectEvent.isRegistrationFormIncorrect) {
                 viewModel.handledRegistrationFormIncorrectEvent()
-                Toast.makeText(context, "Hibas form", Toast.LENGTH_SHORT).show()
             }
         }
 
         val registrationSucceeded by viewModel.registrationSucceededEvent.collectAsState()
         if (registrationSucceeded) {
             LaunchedEffect(registrationSucceeded) {
-                Toast.makeText(context, "sikeres reg", Toast.LENGTH_SHORT).show()
                 viewModel.handledRegistrationSucceededEvent()
                 onSuccessfulRegistration()
             }
@@ -170,7 +169,6 @@ fun RegistrationScreenContent(
         if (registrationFailed) {
             LaunchedEffect(registrationFailed) {
                 viewModel.handledRegistrationFailedEvent()
-                Toast.makeText(context, "reg hiba", Toast.LENGTH_SHORT).show()
             }
         }
 

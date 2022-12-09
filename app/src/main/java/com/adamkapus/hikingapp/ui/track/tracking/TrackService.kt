@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.domain.interactor.tracking.TrackingInteractor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +51,7 @@ class TrackService : Service() {
             .Builder(this, "location")
             .setContentTitle("Tracking your route...")
             .setContentText("Location: unavailable")
+            .setSmallIcon(R.drawable.ic_run)
             .setOngoing(true)
 
         val notificationManager =

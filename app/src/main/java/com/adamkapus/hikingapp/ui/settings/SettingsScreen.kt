@@ -12,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adamkapus.hikingapp.domain.model.authentication.HikingAppUser
 import com.adamkapus.hikingapp.ui.compose.composables.PrimaryButton
+import com.adamkapus.hikingapp.ui.compose.composables.PrimaryDarkButton
+import com.adamkapus.hikingapp.ui.compose.theme.hikingAppTypography
 import com.adamkapus.hikingapp.ui.compose.theme.hikingappColors
 import kotlinx.coroutines.launch
 
@@ -23,7 +25,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.hikingappColors.grey01),
+            .background(MaterialTheme.hikingappColors.white),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LaunchedEffect(Unit) {
@@ -46,8 +48,8 @@ fun SettingsScreen(
         }
 
         if (isUserInfoLoaded && user != null) {
-            Text(text = user!!.email!!)
-            PrimaryButton(
+            Text(text = "Hello, " + user!!.email!! +"!", style = MaterialTheme.hikingAppTypography.infoTextStyleLarge)
+            PrimaryDarkButton(
                 onClickListener = {
                     coroutineScope.launch {
                         viewModel.trySigningOut()
