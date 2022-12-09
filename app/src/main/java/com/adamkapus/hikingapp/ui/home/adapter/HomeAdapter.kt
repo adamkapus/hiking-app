@@ -36,7 +36,6 @@ class HomeAdapter() :
 
 
     fun replaceList(newList: List<Route>) {
-        Log.d("PLS", "NEWLIST ADAOTERBEN" + newList.toString())
         routeList = newList
         submitList(routeList)
     }

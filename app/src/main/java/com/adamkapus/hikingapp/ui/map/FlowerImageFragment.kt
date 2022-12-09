@@ -28,10 +28,7 @@ class FlowerImageFragment : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, 0)
-        /*arguments?.let {
-            displayName = it.getString(ARG_PARAM1)
-            imageURI = it.getString(ARG_PARAM2)
-        }*/
+
     }
 
     override fun onAttach(context: Context) {

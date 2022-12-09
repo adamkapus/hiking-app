@@ -68,9 +68,8 @@ class CameraFragment : Fragment() {
             )
     }
 
-    // CameraX variables
     private lateinit var preview: Preview
-    private lateinit var imageAnalyzer: ImageAnalysis // Analysis use case, for running ML code
+    private lateinit var imageAnalyzer: ImageAnalysis
     private lateinit var imageCapture: ImageCapture
 
 
@@ -149,7 +148,6 @@ class CameraFragment : Fragment() {
                 updateList(uiState.recognitions)
             }
             is RecognitionFinished -> {
-                Log.d("PLS", "Recognitionfinishedstate-be lepve")
                 submitButton.isEnabled = true
                 startButton.isEnabled = true
                 updateList(uiState.recognitions)
@@ -161,11 +159,11 @@ class CameraFragment : Fragment() {
             }
             is SubmissionSuccessful -> {
                 showSnackbar(R.string.camera_submission_success)
-                viewModel.onRecognitionSessionStarted()
+                viewModel.handledSubmissionSuccess()
             }
             is SubmissionFailed -> {
                 showSnackbar(R.string.camera_submission_failed)
-                viewModel.onRecognitionSessionStarted()
+                viewModel.handledSubmissionFailed()
             }
 
         }
@@ -212,7 +210,7 @@ class CameraFragment : Fragment() {
     private fun startRecognition() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener(Runnable {
-            // Used to bind the lifecycle of cameras to the lifecycle owner
+
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             preview = Preview.Builder()
@@ -227,25 +225,21 @@ class CameraFragment : Fragment() {
 
 
             imageAnalyzer = ImageAnalysis.Builder()
-                // This sets the ideal size for the image to be analyse, CameraX will choose the
-                // the most suitable resolution which may not be exactly the same or hold the same
-                // aspect ratio
+
                 .setTargetResolution(Size(224, 224))
-                // How the Image Analyser should pipe in input, 1. every frame but drop no frame, or
-                // 2. go to the latest frame and may drop some frame. The default is 2.
-                // STRATEGY_KEEP_ONLY_LATEST. The following line is optional, kept here for clarity
+
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also { analysisUseCase: ImageAnalysis ->
                     analysisUseCase.setAnalyzer(
                         cameraExecutor,
                         CameraFragment.FlowerImageAnalyzer(requireContext()) { items ->
-                            // updating the list of recognised objects
+
                             viewModel.onRecognitionMade(items)
                         })
                 }
 
-            // Select camera, back is the default. If it is not available, choose front camera
+
             val cameraSelector =
                 if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
                     CameraSelector.DEFAULT_BACK_CAMERA
@@ -254,19 +248,18 @@ class CameraFragment : Fragment() {
                 }
 
             try {
-                // Unbind use cases before rebinding
+
                 cameraProvider.unbindAll()
 
-                // Bind use cases to camera - try to bind everything at once and CameraX will find
-                // the best combination.
+
                 camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalyzer, imageCapture
                 )
 
-                // Attach the preview to preview view, aka View Finder
+
                 preview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-            } catch (exc: Exception) {
-                //Log.e(CameraScreenFragment.TAG, "Use case binding failed", exc)
+            } catch (_: Exception) {
+
             }
 
         }, ContextCompat.getMainExecutor(requireContext()))
@@ -357,14 +350,11 @@ class CameraFragment : Fragment() {
             val compatList = CompatibilityList()
 
             val options = if (compatList.isDelegateSupportedOnThisDevice) {
-                //Log.d(CameraScreenFragment.TAG, "This device is GPU Compatible ")
                 Model.Options.Builder().setDevice(Model.Device.GPU).build()
             } else {
-                //Log.d(CameraScreenFragment.TAG, "This device is GPU Incompatible ")
                 Model.Options.Builder().setNumThreads(4).build()
             }
 
-            // Initialize the Flower Model
             ConvModMeta.newInstance(ctx, options)
         }
 
@@ -372,25 +362,22 @@ class CameraFragment : Fragment() {
 
             val items = mutableListOf<Recognition>()
 
-            // Convert Image to Bitmap then to TensorImage
             val tfImage = TensorImage.fromBitmap(toBitmap(imageProxy))
 
-            //Process the image using the trained model, sort and pick out the top results
             val outputs = flowerModel.process(tfImage)
                 .probabilityAsCategoryList.apply {
-                    sortByDescending { it.score } // Sort with highest confidence first
-                }// take the top results
+                    sortByDescending { it.score }
+                }
 
-            //Converting the top probability items into a list of recognitions
             for (output in outputs) {
                 items.add(Recognition(output.label, output.score))
             }
 
 
-            // Return the result
+
             listener(items.toList())
 
-            // Close the image,this tells CameraX to feed the next image to the analyzer
+
             imageProxy.close()
         }
 
@@ -406,10 +393,9 @@ class CameraFragment : Fragment() {
 
             val image = imageProxy.image ?: return null
 
-            // Initialise Buffer
+
             if (!::bitmapBuffer.isInitialized) {
-                // The image rotation and RGB image buffer are initialized only once
-                //Log.d(CameraScreenFragment.TAG, "Initalise toBitmap()")
+
                 rotationMatrix = Matrix()
                 rotationMatrix.postRotate(imageProxy.imageInfo.rotationDegrees.toFloat())
                 bitmapBuffer = Bitmap.createBitmap(
@@ -417,10 +403,10 @@ class CameraFragment : Fragment() {
                 )
             }
 
-            // Pass image to an image analyser
+
             yuvToRgbConverter.yuvToRgb(image, bitmapBuffer)
 
-            // Create the Bitmap in the correct orientation
+
             return Bitmap.createBitmap(
                 bitmapBuffer,
                 0,

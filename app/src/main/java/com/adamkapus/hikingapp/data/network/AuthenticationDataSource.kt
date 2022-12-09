@@ -57,7 +57,6 @@ class AuthenticationDataSource @Inject constructor(
                 if (task.isSuccessful) {
                     continuation.resume(DataSourceResult(result = true)) {}
                 } else {
-                    Log.d("PLS", task.exception.toString())
                     continuation.resume(DataSourceResult(result = false)) {}
                 }
             }

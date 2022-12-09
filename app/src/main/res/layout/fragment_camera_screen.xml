@@ -27,7 +27,7 @@
         android:layout_gravity="start"
         android:layout_margin="@dimen/defaultLayoutMargin"
         android:backgroundTint="@color/secondaryColor"
-        android:text="SUBMIT" />
+        android:text="@string/submit" />
 
     <Button
         android:id="@+id/start_camera_button"
@@ -36,5 +36,5 @@
         android:layout_gravity="end"
         android:layout_margin="@dimen/defaultLayoutMargin"
         android:backgroundTint="@color/secondaryColor"
-        android:text="START" />
+        android:text="@string/start" />
 </FrameLayout>

@@ -30,7 +30,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -71,6 +70,6 @@ class HomeFragment : Fragment() {
         findNavController().navigate(
             R.id.map,
             bundle
-        )//navigate(R.id.action_homeNavGraph_to_MapFragment, bundle)
+        )
     }
 }

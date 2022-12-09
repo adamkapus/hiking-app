@@ -31,9 +31,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.d("PLS", destination.toString())
             if (screensWithoutBottomNavBar.contains(destination.id)) {
-                Log.d("PLS", "NEM KENE LATSZODNOM")
                 bottomNavigationView.visibility = View.GONE
             } else {
                 bottomNavigationView.visibility = View.VISIBLE

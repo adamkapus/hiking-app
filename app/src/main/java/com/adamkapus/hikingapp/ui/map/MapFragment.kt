@@ -67,7 +67,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 intent?.data?.also { uri ->
-                    //openGPXFile(uri)
                     gpxFileSelected(uri)
                 }
             }
@@ -110,9 +109,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             null
         }
 
-        Log.d("PLS", "MAPBEN A ROUITE ID: " + userRouteId.toString())
-
-
         setupButtons()
         setupCheckboxes()
 
@@ -128,13 +124,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
     private fun render(uiState: MapUiState) {
         when (uiState) {
             is MapUiState.Initial -> {
-                Log.d("PLS", uiState.toString())
                 drawMarkersOnMap(uiState.flowers)
                 val location = uiState.userPosition?.let { LatLng(it.latitude, it.longitude) }
                 moveCamera(location)
             }
             is MapUiState.RouteLoaded -> {
-                Log.d("PLS", uiState.toString())
                 drawMarkersOnMap(uiState.flowers)
                 drawRouteOnMap(uiState.route)
                 val location = uiState.route.points.firstOrNull()?.let { LatLng(it.Lat, it.Lng) }

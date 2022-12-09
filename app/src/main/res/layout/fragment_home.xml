@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
     <TextView
-        android:text="Your recorded routes"
+        android:text="@string/your_recorded_routes"
         android:textSize="25dp"
         android:layout_margin="@dimen/defaultLayoutMargin"
         android:layout_gravity="top|center"

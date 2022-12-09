@@ -57,6 +57,15 @@
 
     <string name="camera_submission_success">Submitting flower was successful</string>
     <string name="camera_submission_failed">Submitting flower failed</string>
+    <string name="submit">SUBMIT</string>
+    <string name="start">START</string>
+    <string name="your_recorded_routes">Your recorded routes</string>
+    <string name="load_gpx_file">Load GPX File</string>
+    <string name="let_s_record_a_route">Let\'s record a route!</string>
+    <string name="your_route_s_name">Your route\'s name:</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="start_fragment">Start</string>
 
 
 </resources>
