@@ -1,7 +1,6 @@
 package com.adamkapus.hikingapp.ui.track.tracking
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -12,13 +11,13 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LocationClient(
-    private val context: Context,
+@SuppressLint("MissingPermission")
+class LocationClient @Inject constructor(
     private val client: FusedLocationProviderClient
 ) {
 
-    @SuppressLint("MissingPermission")
     fun getLocationUpdates(interval: Long): Flow<Location> {
         return callbackFlow {
 

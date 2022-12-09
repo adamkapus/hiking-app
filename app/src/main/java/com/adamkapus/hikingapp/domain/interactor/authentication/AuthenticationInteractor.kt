@@ -8,20 +8,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class AuthenticationInteractor @Inject constructor() {
+class AuthenticationInteractor @Inject constructor(
+    private val authenticationDataSource: AuthenticationDataSource
+) {
 
 
     suspend fun isSignedIn(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
-        val dataSource = AuthenticationDataSource()
-        val response = dataSource.isSignedIn()
-        response.toInteractorResponse()
+
+        return@withContext authenticationDataSource.isSignedIn().toInteractorResponse()
     }
 
     suspend fun getUserInformation(): InteractorResponse<HikingAppUser> =
         withContext(Dispatchers.IO) {
-            val dataSource = AuthenticationDataSource()
-            val response = dataSource.getUserInfo()
-            response.toInteractorResponse()
+            return@withContext authenticationDataSource.getUserInfo().toInteractorResponse()
         }
 
     suspend fun signUp(
@@ -29,24 +28,19 @@ class AuthenticationInteractor @Inject constructor() {
         password: String
     ): InteractorResponse<Boolean> =
         withContext(Dispatchers.IO) {
-            val dataSource = AuthenticationDataSource()
-            val response = dataSource.signUp(emailAddress, password)
-            response.toInteractorResponse()
+
+            return@withContext authenticationDataSource.signUp(emailAddress, password).toInteractorResponse()
         }
 
     suspend fun signOut(): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
-        val dataSource = AuthenticationDataSource()
-        val response = dataSource.signOut()
-        response.toInteractorResponse()
+        return@withContext authenticationDataSource.signOut().toInteractorResponse()
     }
 
     suspend fun signIn(
         emailAddress: String,
         password: String
     ): InteractorResponse<Boolean> = withContext(Dispatchers.IO) {
-        val dataSource = AuthenticationDataSource()
-        val response = dataSource.signIn(emailAddress, password)
-        response.toInteractorResponse()
+        return@withContext authenticationDataSource.signIn(emailAddress, password).toInteractorResponse()
     }
 
 }

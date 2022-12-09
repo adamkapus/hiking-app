@@ -9,12 +9,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 
+@SuppressLint("MissingPermission")
 class LocationDataSource @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ) {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @SuppressLint("MissingPermission")
     suspend fun getLastPosition() =
         suspendCancellableCoroutine<DataSourceResponse<Location?>> { continuation ->
             fusedLocationProviderClient.getLastLocation()

@@ -160,6 +160,7 @@ fun RegistrationScreenContent(
         val registrationSucceeded by viewModel.registrationSucceededEvent.collectAsState()
         if (registrationSucceeded) {
             LaunchedEffect(registrationSucceeded) {
+                Toast.makeText(context, "sikeres reg", Toast.LENGTH_SHORT).show()
                 viewModel.handledRegistrationSucceededEvent()
                 onSuccessfulRegistration()
             }

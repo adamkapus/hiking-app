@@ -28,8 +28,7 @@ class SettingsViewModel @Inject constructor(
     val signOutFailedEvent = _signOutFailedEvent.asStateFlow()
 
     suspend fun loadUserInfo() = viewModelScope.launch {
-        val inter = AuthenticationInteractor()
-        val response = inter.getUserInformation()
+        val response = authenticationInteractor.getUserInformation()
         when (response) {
             is InteractorResult -> {
                 val user = response.result

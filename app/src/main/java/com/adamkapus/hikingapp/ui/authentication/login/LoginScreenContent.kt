@@ -146,6 +146,7 @@ fun LoginScreenContent(
         if (loginSucceeded) {
             LaunchedEffect(loginSucceeded) {
                 viewModel.handledLoginSucceededEvent()
+                Toast.makeText(context, "Hibas form", Toast.LENGTH_SHORT).show()
                 onSuccessfulLogin()
             }
         }
@@ -154,7 +155,7 @@ fun LoginScreenContent(
         if (loginFailed) {
             LaunchedEffect(loginFailed) {
                 viewModel.handledLoginFailedEvent()
-                Toast.makeText(context, "reg hiba", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "login hiba", Toast.LENGTH_SHORT).show()
             }
         }
 

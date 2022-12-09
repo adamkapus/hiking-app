@@ -1,4 +1,4 @@
-package com.adamkapus.hikingapp.ui.list
+package com.adamkapus.hikingapp.ui.home
 
 import com.adamkapus.hikingapp.domain.model.map.Route
 

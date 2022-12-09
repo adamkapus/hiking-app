@@ -1,4 +1,4 @@
-package com.adamkapus.hikingapp.ui.list
+package com.adamkapus.hikingapp.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentHomeBinding
 import com.adamkapus.hikingapp.domain.model.map.Route
-import com.adamkapus.hikingapp.ui.list.HomeUiState.Initial
-import com.adamkapus.hikingapp.ui.list.HomeUiState.RoutesLoaded
-import com.adamkapus.hikingapp.ui.list.adapter.HomeAdapter
+import com.adamkapus.hikingapp.ui.home.HomeUiState.Initial
+import com.adamkapus.hikingapp.ui.home.HomeUiState.RoutesLoaded
+import com.adamkapus.hikingapp.ui.home.adapter.HomeAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

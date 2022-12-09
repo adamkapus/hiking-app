@@ -1,21 +1,20 @@
 package com.adamkapus.hikingapp.data.network
 
-import android.util.Log
 import com.adamkapus.hikingapp.data.model.DataSourceError
 import com.adamkapus.hikingapp.data.model.DataSourceResponse
 import com.adamkapus.hikingapp.data.model.DataSourceResult
 import com.adamkapus.hikingapp.data.model.FlowerLocation
 import com.adamkapus.hikingapp.utils.FlowerResolver
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObjects
-import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class FlowerLocationDataSource @Inject constructor(
-    private val flowerResolver: FlowerResolver
+    private val flowerResolver: FlowerResolver,
+    private val db: FirebaseFirestore
 ) {
 
     suspend fun submitFlowerLocation(
@@ -31,7 +30,6 @@ class FlowerLocationDataSource @Inject constructor(
             "imageUrl" to imageURL,
             "rarity" to flowerResolver.getRarity(name).toString()
         )
-        val db: FirebaseFirestore = Firebase.firestore
         return suspendCoroutine { continuation ->
             db.collection("flowers")
                 .add(data)
@@ -45,13 +43,13 @@ class FlowerLocationDataSource @Inject constructor(
     }
 
     suspend fun getFlowerLocations(): DataSourceResponse<List<FlowerLocation>> {
-        Log.d("PLS", "DS-BEN MAR")
-        val db: FirebaseFirestore = Firebase.firestore
         return suspendCoroutine { continuation ->
             db.collection("flowers")
-                .get()
+                .get(Source.DEFAULT)
                 .addOnSuccessListener { documents ->
-                    continuation.resume(DataSourceResult(documents.toObjects<FlowerLocation>()))
+                    continuation.resume(
+                        DataSourceResult(documents.toObjects<FlowerLocation>())
+                    )
                 }
                 .addOnFailureListener { continuation.resume(DataSourceError) }
         }

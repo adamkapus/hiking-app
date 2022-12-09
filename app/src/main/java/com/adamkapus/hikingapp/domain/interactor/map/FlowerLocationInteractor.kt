@@ -15,9 +15,7 @@ class FlowerLocationInteractor @Inject constructor(
 
     suspend fun getFlowerLocations(): InteractorResponse<List<FlowerLocation>> =
         withContext(Dispatchers.IO) {
-            Log.d("PLS", "GETFLOWERLOC")
             val resp = flowerLocationDataSource.getFlowerLocations()
-            Log.d("PLS", "INT RESP:" + resp.toString())
             return@withContext resp.toInteractorResponse()
         }
 }

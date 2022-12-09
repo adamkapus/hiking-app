@@ -12,11 +12,6 @@ interface RouteDao {
     @Insert
     suspend fun insertRouteItem(routeItem: RouteItem): Long
 
-    /*@Query(
-        "SELECT * FROM routeitem" + " JOIN coordinateitem ON routeitem.id = coordinateitem.route_id"
-    )
-    suspend fun getAllRouteItem(): Map<RouteItem, List<CoordinateItem>>*/
-
     @Query(
         "SELECT * FROM routeitem"
     )
@@ -26,11 +21,6 @@ interface RouteDao {
         "SELECT * FROM routeitem WHERE routeitem.id = :id"
     )
     suspend fun getRouteItem(id: Int): RouteItem
-
-    /*@Query(
-        "SELECT * FROM routeitem" + " JOIN coordinateitem ON routeitem.id = coordinateitem.route_id WHERE routeitem.id = :id"
-    )
-    suspend fun getRouteItem(id : Int): Map<RouteItem, List<CoordinateItem>>*/
 
     @Query("DELETE FROM routeitem")
     suspend fun deleteAllRouteItem()

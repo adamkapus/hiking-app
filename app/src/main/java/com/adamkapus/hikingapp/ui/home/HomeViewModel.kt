@@ -1,12 +1,12 @@
-package com.adamkapus.hikingapp.ui.list
+package com.adamkapus.hikingapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkapus.hikingapp.domain.interactor.route.RouteInteractor
 import com.adamkapus.hikingapp.domain.model.InteractorError
 import com.adamkapus.hikingapp.domain.model.InteractorResult
-import com.adamkapus.hikingapp.ui.list.HomeUiState.Initial
-import com.adamkapus.hikingapp.ui.list.HomeUiState.RoutesLoaded
+import com.adamkapus.hikingapp.ui.home.HomeUiState.Initial
+import com.adamkapus.hikingapp.ui.home.HomeUiState.RoutesLoaded
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

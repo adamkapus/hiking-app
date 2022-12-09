@@ -1,67 +1,23 @@
 package com.adamkapus.hikingapp.domain.interactor.gpx
 
-import android.util.Log
+import com.adamkapus.hikingapp.data.gpx.GpxDataSource
+import com.adamkapus.hikingapp.domain.model.InteractorResponse
 import com.adamkapus.hikingapp.domain.model.map.Coordinate
-import io.ticofab.androidgpxparser.parser.GPXParser
-import io.ticofab.androidgpxparser.parser.domain.Extensions
-import io.ticofab.androidgpxparser.parser.domain.Gpx
-import io.ticofab.androidgpxparser.parser.domain.Track
-import io.ticofab.androidgpxparser.parser.domain.TrackSegment
+import com.adamkapus.hikingapp.domain.model.toInteractorResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.xmlpull.v1.XmlPullParserException
-import java.io.IOException
 import java.io.InputStream
 import javax.inject.Inject
 
 const val TAG = "GPX"
 
-class GpxInteractor @Inject constructor() {
+class GpxInteractor @Inject constructor(
+    private val gpxDataSource: GpxDataSource
+) {
 
-    //ToDo suspend
-    suspend fun parseGpxFile(inputStream: InputStream): MutableList<Coordinate> = withContext(Dispatchers.IO) {
-        val route: MutableList<Coordinate> = mutableListOf()
-        inputStream.use { inputStream ->
-            val parser = GPXParser()
-            var parsedGpx: Gpx? = null
-            try {
-                parsedGpx = parser.parse(inputStream) // consider doing this on a background thread
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: XmlPullParserException) {
-                e.printStackTrace()
-            }
-
-            if (parsedGpx != null) {
-                // log stuff
-                val tracks: List<Track> = parsedGpx.tracks
-                for (i in tracks.indices) {
-                    val track: Track = tracks[i]
-                    Log.d(TAG, "track $i:")
-                    val segments: List<TrackSegment> = track.getTrackSegments()
-                    for (j in segments.indices) {
-                        val segment = segments[j]
-                        Log.d(TAG, "  segment $j:")
-                        for (trackPoint in segment.trackPoints) {
-                            route.add(Coordinate(trackPoint.latitude, trackPoint.longitude))
-                            var msg =
-                                "    point: lat " + trackPoint.latitude + ", lon " + trackPoint.longitude + ", time " + trackPoint.time
-                            val ext: Extensions? = trackPoint.extensions
-                            var speed: Double
-                            if (ext != null) {
-                                speed = ext.getSpeed()
-                                msg = "$msg, speed $speed"
-                            }
-                            Log.d(TAG, msg)
-                        }
-                    }
-                }
-
-            } else {
-                Log.e(TAG, "Error parsing gpx track!")
-            }
-
+    suspend fun parseGpxFile(inputStream: InputStream): InteractorResponse<MutableList<Coordinate>> =
+        withContext(Dispatchers.IO) {
+            return@withContext gpxDataSource.parseGpxFile(inputStream).toInteractorResponse()
         }
-        route
-    }
+
 }

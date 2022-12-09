@@ -1,4 +1,4 @@
-package com.adamkapus.hikingapp.ui.list.adapter
+package com.adamkapus.hikingapp.ui.home.adapter
 
 import android.util.Log
 import android.view.LayoutInflater

@@ -33,8 +33,6 @@ class CameraViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<CameraUIState>(ReadyForRecognition)
     val uiState: StateFlow<CameraUIState> = _uiState.asStateFlow()
 
-    //Todo permission denied event, successful submission event
-
 
     //ToDo error képernyő
     fun onRecognitionMade(newRecognitions: List<Recognition>) = viewModelScope.launch {
@@ -80,19 +78,12 @@ class CameraViewModel @Inject constructor(
         return orderedAndTrimmedList
     }
 
-
-    private fun finishRecognitionSession() {
-
-    }
-
     fun submitRecognition(image: Bitmap?) = viewModelScope.launch {
-        Log.d("PLS", "Viewmodelben")
         _uiState.update { SubmissionInProgress }
         val resp = flowerImageSubmissionInteractor.submitFlowerImageWithLocation(
             flowerName = currentRecognitionSession.currentRecognitionList.sortedByDescending { it.confidence }[0].label,
             image = image
         )
-        Log.d("PLS", resp.toString())
         when (resp) {
             is InteractorError -> {
                 _uiState.update { SubmissionFailed }
@@ -103,8 +94,12 @@ class CameraViewModel @Inject constructor(
         }
     }
 
-    fun onPermissionsDenied() {
+    fun handledSubmissionFailed() {
+        _uiState.update { ReadyForRecognition }
+    }
 
+    fun handledSubmissionSuccess() {
+        _uiState.update { ReadyForRecognition }
     }
 
 }

@@ -22,6 +22,7 @@ import java.nio.ByteBuffer
  * since this is not an efficient camera pipeline due to the multiple copies
  * required to convert each frame.
  */
+/*
 class YuvToRgbConverter(context: Context) {
     private val rs = RenderScript.create(context)
     private val scriptYuvToRgb = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs))
@@ -184,3 +185,5 @@ class YuvToRgbConverter(context: Context) {
         }
     }
 }
+
+ */

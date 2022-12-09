@@ -1,4 +1,4 @@
-package com.adamkapus.hikingapp.ui.list.adapter
+package com.adamkapus.hikingapp.ui.home.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.adamkapus.hikingapp.domain.model.map.Route

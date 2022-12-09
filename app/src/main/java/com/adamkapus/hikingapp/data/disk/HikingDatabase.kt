@@ -19,15 +19,3 @@ abstract class HikingDatabase : RoomDatabase() {
     abstract fun routeDao(): RouteDao
     abstract fun coordinateDao(): CoordinateDao
 }
-
-
-/*
-* @Database(
-    version = 1,
-    exportSchema = false,
-    entities = [News::class]
-)
-abstract class NewsDatabase : RoomDatabase() {
-    abstract fun newsDao(): NewsDao
-}
-* */

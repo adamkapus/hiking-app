@@ -46,7 +46,6 @@
     <string name="authentication_failure_alert_too_short_password">Too short password!</string>
     <string name="authentication_failure_alert_unmatching_passwords">Not matching passwords!</string>
     <string name="authentication_failure_alert_invalid_email_or_password">Invalid email or password!</string>
-    <string name="general_network_error_description">Network error occured</string>
     <string name="login_buttons_next">Login</string>
     <string name="login_labels_password_hint">Description</string>
 
@@ -56,6 +55,9 @@
 
     <string name="track_saving_route_success">Saving route was successful</string>
     <string name="track_saving_route_failed">Saving route failed</string>
+
+    <string name="camera_submission_success">Saving route was successful</string>
+    <string name="camera_submission_failed">Saving route failed</string>
 
 
 </resources>

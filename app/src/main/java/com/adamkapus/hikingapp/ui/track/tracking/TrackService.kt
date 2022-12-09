@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.adamkapus.hikingapp.domain.interactor.tracking.TrackingInteractor
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +22,10 @@ class TrackService : Service() {
     @Inject
     lateinit var trackingInteractor: TrackingInteractor
 
+    @Inject
+    lateinit var locationClient: LocationClient
+
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private lateinit var locationClient: LocationClient
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -32,10 +33,6 @@ class TrackService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        locationClient = LocationClient(
-            applicationContext,
-            LocationServices.getFusedLocationProviderClient(applicationContext)
-        )
     }
 
     override fun onStartCommand(

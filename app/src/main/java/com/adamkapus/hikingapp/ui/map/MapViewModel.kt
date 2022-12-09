@@ -27,7 +27,8 @@ class MapViewModel @Inject constructor(
     private val flowerResolver: FlowerResolver,
     private val locationInteractor: LocationInteractor,
     private val flowerLocationInteractor: FlowerLocationInteractor,
-    private val routeInteractor: RouteInteractor
+    private val routeInteractor: RouteInteractor,
+    private val gpxInteractor: GpxInteractor
 ) : ViewModel() {
     private val userPosition = MutableStateFlow<Location?>(null)
     private val flowerVisibilityState =
@@ -111,9 +112,12 @@ class MapViewModel @Inject constructor(
     }
 
     fun loadRouteFromGpxFile(inputStream: InputStream) = viewModelScope.launch {
-        val inter = GpxInteractor()
-        val resp = inter.parseGpxFile(inputStream)
-        route.update { Route(null, "Route", resp) }
+        val resp = gpxInteractor.parseGpxFile(inputStream)
+        when(resp){
+            is InteractorError -> {}
+            is InteractorResult -> { route.update { Route(null, "Route", resp.result) }}
+        }
+
     }
 
     fun loadUserRecordedRoute(id: Int) = viewModelScope.launch {

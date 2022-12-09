@@ -16,7 +16,7 @@ import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentTrackBinding
 import com.adamkapus.hikingapp.ui.track.TrackUiState.*
 import com.adamkapus.hikingapp.ui.track.tracking.TrackService
-import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
+import com.adamkapus.hikingapp.utils.hasLocationPermission
 import com.adamkapus.hikingapp.utils.showSnackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

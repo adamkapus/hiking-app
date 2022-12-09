@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(
-    private val authenticationInteractor :AuthenticationInteractor
+    private val authenticationInteractor: AuthenticationInteractor
 ) : ViewModel() {
 
     private val _uiState =
@@ -62,8 +62,6 @@ class RegistrationViewModel @Inject constructor(
         val isFormValid = emailAddress.isNotNullOrBlank() &&
                 password.isNotNullOrBlank() &&
                 passwordAgain.isNotNullOrBlank()
-        //_uiState.update { uiState.value.copy(isRegistrationButtonEnabled = isFormValid) }
-        //RegistrationUiState.Initial(isRegistrationButtonEnabled = isFormValid)
         _uiState.update { _ -> RegistrationUiState.Initial(isRegistrationButtonEnabled = isFormValid) }
     }
 
@@ -102,7 +100,6 @@ class RegistrationViewModel @Inject constructor(
 
     private suspend fun register(emailAddress: String, password: String) = viewModelScope.launch {
         _uiState.update { _ -> RegistrationUiState.RegistrationInProgress }
-        //Reg...
         val response = authenticationInteractor.signUp(emailAddress, password)
         when (response) {
             is InteractorResult -> {
@@ -116,12 +113,6 @@ class RegistrationViewModel @Inject constructor(
             }
             is InteractorError -> {}
         }
-        /* if (success) {
-             _registrationSucceededEvent.update { true }
-         } else {
-             _uiState.update { _ -> RegistrationUiState.Initial(isRegistrationButtonEnabled = true) }
-             _registrationFailedEvent.update { true }
-         }*/
     }
 
     fun handledRegistrationFormIncorrectEvent() {
@@ -148,10 +139,7 @@ data class RegistrationFormIncorrect(
 )
 
 enum class AuthenticationFailureType(@StringRes open val titleRes: Int) {
-
     INVALID_EMAIL_FORMAT(R.string.authentication_failure_alert_invalid_email_format),
     TOO_SHORT_PASSWORD(R.string.authentication_failure_alert_too_short_password),
     MISMATCHED_PASSWORD(R.string.authentication_failure_alert_unmatching_passwords),
-    INVALID_EMAIL_OR_PASSWORD(R.string.authentication_failure_alert_invalid_email_or_password),
-    GENERAL_NETWORK_ERROR(R.string.general_network_error_description)
 }

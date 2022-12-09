@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.adamkapus.hikingapp.ui.list.HomeFragment"
+        android:name="com.adamkapus.hikingapp.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 

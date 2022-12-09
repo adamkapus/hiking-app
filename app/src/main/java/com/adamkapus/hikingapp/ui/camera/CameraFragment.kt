@@ -25,15 +25,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.adamkapus.hikingapp.R
 import com.adamkapus.hikingapp.databinding.FragmentCameraScreenBinding
 import com.adamkapus.hikingapp.ml.ConvModMeta
 import com.adamkapus.hikingapp.ui.camera.CameraUIState.*
 import com.adamkapus.hikingapp.ui.camera.adapter.RecognitionAdapter
-import com.adamkapus.hikingapp.utils.FlowerResolver
-import com.adamkapus.hikingapp.utils.PermissionUtils.hasAllPermissions
-import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
-import com.adamkapus.hikingapp.utils.YuvToRgbConverter
-import com.adamkapus.hikingapp.utils.YuvToRgbConverterUJJ
+import com.adamkapus.hikingapp.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.gpu.CompatibilityList
@@ -78,10 +75,6 @@ class CameraFragment : Fragment() {
 
 
     private var capturedImage: Bitmap? = null
-        set(value) {
-            Log.d("PLS", "CAPTURED IMAGE bEALLITVA, ERTEK:" + value.toString())
-            field = value
-        }
 
 
     private lateinit var camera: Camera
@@ -98,7 +91,7 @@ class CameraFragment : Fragment() {
             } else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 startSubmitting()
             } else {
-                viewModel.onPermissionsDenied()
+                showSnackbar(R.string.permission_location_submitting_reasoning)
             }
 
         }
@@ -110,7 +103,7 @@ class CameraFragment : Fragment() {
             if (requireContext().hasAllPermissions(REQUIRED_PERMISSIONS_FOR_ANALYSIS)) {
                 onStartButtonPressed()
             } else {
-                viewModel.onPermissionsDenied()
+                showSnackbar(R.string.permission_camera_reasoning)
             }
 
         }
@@ -122,7 +115,7 @@ class CameraFragment : Fragment() {
         binding = FragmentCameraScreenBinding.inflate(layoutInflater, container, false)
         submitButton = binding.submitButton
         startButton = binding.startCameraButton
-        return binding.root;
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -142,8 +135,6 @@ class CameraFragment : Fragment() {
             }
         }
 
-        //ToDo handling events - de nincseneke evenetek ezen a sreenen?
-
     }
 
     private fun render(uiState: CameraUIState) {
@@ -156,7 +147,6 @@ class CameraFragment : Fragment() {
                 submitButton.isEnabled = false
                 startButton.isEnabled = false
                 updateList(uiState.recognitions)
-                //startRecognition()
             }
             is RecognitionFinished -> {
                 Log.d("PLS", "Recognitionfinishedstate-be lepve")
@@ -166,13 +156,16 @@ class CameraFragment : Fragment() {
                 takeImageThenStopRecognition()
             }
             is SubmissionInProgress -> {
-                //ToDo dialog
+                submitButton.isEnabled = false
+                startButton.isEnabled = false
             }
             is SubmissionSuccessful -> {
-                //ToDo dilaog
+                showSnackbar(R.string.camera_submission_success)
+                viewModel.onRecognitionSessionStarted()
             }
             is SubmissionFailed -> {
-                //ToDO dialog
+                showSnackbar(R.string.camera_submission_failed)
+                viewModel.onRecognitionSessionStarted()
             }
 
         }
@@ -196,7 +189,6 @@ class CameraFragment : Fragment() {
     }
 
     private fun onStartButtonPressed() {
-
         if (requireContext().hasAllPermissions(REQUIRED_PERMISSIONS_FOR_ANALYSIS)) {
             startRecognition()
             viewModel.onRecognitionSessionStarted()
@@ -214,46 +206,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun startSubmitting() {
-        Log.d("PLS", "startSubmitting")
         viewModel.submitRecognition(capturedImage)
-        /*
-        val image = capturedImage
-        if (image == null) {
-            Log.d("PLS", "startSubmittingben null!!")
-            viewModel.submitRecognition(null)
-            return
-        }
-        //Log.d("PLS", "startSubmittingben NEM null!!")
-        //val bitmap: Bitmap = image
-        //val yuvToRgbConverter = YuvToRgbConverter(requireContext())
-        //val bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
-        //yuvToRgbConverter.yuvToRgb(image, bitmap)
-
-        viewModel.submitRecognition(bitmap)
-
-
-        val baos = ByteArrayOutputStream()
-        bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val imageInBytes = baos.toByteArray()
-
-        val storageReference = FirebaseStorage.getInstance().reference
-        val newImageName = URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8") + ".jpg"
-        val newImageRef = storageReference.child("images/$newImageName")
-
-        newImageRef.putBytes(imageInBytes)
-            .addOnFailureListener { _ ->
-
-            }
-            .continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let { throw it }
-                }
-
-                newImageRef.downloadUrl
-            }
-            .addOnSuccessListener { downloadUri ->
-
-            }*/
     }
 
     private fun startRecognition() {
@@ -318,56 +271,45 @@ class CameraFragment : Fragment() {
 
     private fun takeImageThenStopRecognition() {
         imageCapture.takePicture(
-            cameraExecutor, // Defines where the callbacks are run
+            cameraExecutor,
             @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
                 override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    val rot = imageProxy.imageInfo.rotationDegrees
-                    Log.d("PLS", "ROTACIO DEGREE " + rot.toString())
                     val image = imageProxy.image
                     if (image == null) {
                         capturedImage = null
                         stopRecognition()
                     } else {
-                        val imageFormat = image.format
-                        if (imageFormat == ImageFormat.YUV_420_888) {
-                            val yuvToRgbConverter = YuvToRgbConverterUJJ(requireContext())
-                            val bitmap =
-                                Bitmap.createBitmap(
-                                    image.width,
-                                    image.height,
-                                    Bitmap.Config.ARGB_8888
-                                )
-                            yuvToRgbConverter.yuvToRgb(image, bitmap)
-                            capturedImage = bitmap
-                        } else if (imageFormat == ImageFormat.JPEG) {
-                            Log.d("PLS", "Imageformatjpg")
-                            val array = jpegImageToJpegByteArray(image)
-                            Log.d("PLS", "array hossza" + array.size.toString())
-                            val simandekodolt = BitmapFactory.decodeByteArray(array, 0, array.size)
-
-
-                            val rotationMatrix: Matrix = Matrix()
-                            rotationMatrix.postRotate(imageProxy.imageInfo.rotationDegrees.toFloat())
-                            /*val bitmapBuffer: Bitmap = Bitmap.createBitmap(
-                                imageProxy.width, imageProxy.height, Bitmap.Config.ARGB_8888
-                            )*/
-                            val ezjo = Bitmap.createBitmap(
-                                simandekodolt,
-                                0,
-                                0,
-                                simandekodolt.width,
-                                simandekodolt.height,
-                                rotationMatrix,
-                                false
-                            )
-                            capturedImage = ezjo
-                            if (capturedImage == null) {
-                                Log.d("PLS", "dekod utan nulllll!!!!!")
+                        when (image.format) {
+                            ImageFormat.YUV_420_888 -> {
+                                val yuvToRgbConverter = YuvToRgbConverterUtil(requireContext())
+                                val bitmap =
+                                    Bitmap.createBitmap(
+                                        image.width,
+                                        image.height,
+                                        Bitmap.Config.ARGB_8888
+                                    )
+                                yuvToRgbConverter.yuvToRgb(image, bitmap)
+                                capturedImage = bitmap
                             }
-                            Log.d("PLS", "dekod utan" + capturedImage.toString())
-                        } else {
-                            Log.d("PLS", "se nem yuv, se nem jpg")
-                            capturedImage = null
+                            ImageFormat.JPEG -> {
+                                val byteArray = jpegImageToJpegByteArray(image)
+                                val simpleBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                                val rotationMatrix: Matrix = Matrix()
+                                rotationMatrix.postRotate(imageProxy.imageInfo.rotationDegrees.toFloat())
+                                val rotatedBitmap = Bitmap.createBitmap(
+                                    simpleBitmap,
+                                    0,
+                                    0,
+                                    simpleBitmap.width,
+                                    simpleBitmap.height,
+                                    rotationMatrix,
+                                    false
+                                )
+                                capturedImage = rotatedBitmap
+                            }
+                            else -> {
+                                capturedImage = null
+                            }
                         }
 
                         stopRecognition()
@@ -375,7 +317,6 @@ class CameraFragment : Fragment() {
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    Log.d("PLS", "iamge capture error")
                     capturedImage = null
                     stopRecognition()
                 }
@@ -384,8 +325,8 @@ class CameraFragment : Fragment() {
     }
 
     private fun jpegImageToJpegByteArray(image: Image): ByteArray {
-        val planes = image.planes;
-        val buffer = planes[0].buffer;
+        val planes = image.planes
+        val buffer = planes[0].buffer
         val array = ByteArray(buffer.capacity())
         buffer.get(array)
         return array
@@ -395,9 +336,7 @@ class CameraFragment : Fragment() {
         requireActivity().runOnUiThread {
             val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            Log.d("PLS", "unbind elott")
             cameraProvider.unbindAll()
-            Log.d("PLS", "unbind utan")
         }
     }
 
@@ -454,7 +393,7 @@ class CameraFragment : Fragment() {
         /**
          * Convert Image Proxy to Bitmap
          */
-        private val yuvToRgbConverter = YuvToRgbConverter(ctx)
+        private val yuvToRgbConverter = YuvToRgbConverterUtil(ctx)
         private lateinit var bitmapBuffer: Bitmap
         private lateinit var rotationMatrix: Matrix
 

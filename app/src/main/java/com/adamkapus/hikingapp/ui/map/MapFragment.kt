@@ -25,7 +25,7 @@ import com.adamkapus.hikingapp.domain.model.map.Route
 import com.adamkapus.hikingapp.ui.map.model.FlowerOnMap
 import com.adamkapus.hikingapp.utils.FlowerRarity
 import com.adamkapus.hikingapp.utils.MapUtils
-import com.adamkapus.hikingapp.utils.PermissionUtils.hasLocationPermission
+import com.adamkapus.hikingapp.utils.hasLocationPermission
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment

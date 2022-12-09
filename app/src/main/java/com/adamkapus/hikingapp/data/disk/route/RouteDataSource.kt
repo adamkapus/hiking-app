@@ -40,32 +40,14 @@ class RouteDataSource @Inject constructor(
                     points = coordinateItems.map { Coordinate(Lat = it.lat, Lng = it.lng) }
                 )
             )
-            /*)
-            result.add(Route(
-                id = route.key.id,
-                name = route.key.name,
-                points = route.value.map { Coordinate(Lat = it.lat, Lng = it.lng) }
-            ))*/
         }
-        return DataSourceResult(result)//DataSourceResult(routeDao.getAllRouteItem().map { it.toRoute() })
+        return DataSourceResult(result)
     }
 
     suspend fun getRoute(id: Int): DataSourceResponse<Route> {
         val routeItem = routeDao.getRouteItem(id)
         val coordinateItems = coordinateDao.getRoutesCoordinateItem(routeItem.id!!)
         val list = coordinateItems.map { Coordinate(Lat = it.lat, Lng = it.lng) }
-        /*val map = routeDao.getAllRouteItem()
-        Log.d("PLS", "ÖSSZES ROUTE" + map.toString())
-        val list = mutableListOf<Route>()
-        for (route in map.entries) {
-            list.add(Route(
-                id = route.key.id,
-                name = route.key.name,
-                points = route.value.map { Coordinate(Lat = it.lat, Lng = it.lng) }
-            ))
-        }
-        val result = list.find { it.id == id }*/
         return DataSourceResult(Route(id = routeItem.id, name = routeItem.name, points = list))
-        //DataSourceResult(routeDao.getAllRouteItem().map { it.toRoute() })
     }
 }

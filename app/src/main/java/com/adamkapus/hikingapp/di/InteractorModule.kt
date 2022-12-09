@@ -2,7 +2,9 @@ package com.adamkapus.hikingapp.di
 
 import com.adamkapus.hikingapp.data.disk.route.RouteDataSource
 import com.adamkapus.hikingapp.data.disk.tracking.TrackingDataSource
+import com.adamkapus.hikingapp.data.gpx.GpxDataSource
 import com.adamkapus.hikingapp.data.location.LocationDataSource
+import com.adamkapus.hikingapp.data.network.AuthenticationDataSource
 import com.adamkapus.hikingapp.data.network.FlowerImageDataSource
 import com.adamkapus.hikingapp.data.network.FlowerLocationDataSource
 import com.adamkapus.hikingapp.domain.interactor.analysis.AnalysisInteractor
@@ -16,6 +18,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ticofab.androidgpxparser.parser.GPXParser
 import javax.inject.Singleton
 
 @Module
@@ -24,8 +27,8 @@ object InteractorModule {
 
     @Singleton
     @Provides
-    fun getAuthenticationInteractor(): AuthenticationInteractor {
-        return AuthenticationInteractor()
+    fun getAuthenticationInteractor(authenticationDataSource: AuthenticationDataSource): AuthenticationInteractor {
+        return AuthenticationInteractor(authenticationDataSource)
     }
 
     @Singleton
@@ -48,8 +51,8 @@ object InteractorModule {
 
     @Singleton
     @Provides
-    fun getGpxInteractor(): GpxInteractor {
-        return GpxInteractor()
+    fun getGpxInteractor(gpxDataSource : GpxDataSource): GpxInteractor {
+        return GpxInteractor(gpxDataSource)
     }
 
     @Singleton
