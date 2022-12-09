@@ -247,8 +247,11 @@ class CameraFragment : Fragment() {
 
             // Select camera, back is the default. If it is not available, choose front camera
             val cameraSelector =
-                if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA))
-                    CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
+                if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                    CameraSelector.DEFAULT_BACK_CAMERA
+                } else {
+                    CameraSelector.DEFAULT_FRONT_CAMERA
+                }
 
             try {
                 // Unbind use cases before rebinding
@@ -293,7 +296,8 @@ class CameraFragment : Fragment() {
                             }
                             ImageFormat.JPEG -> {
                                 val byteArray = jpegImageToJpegByteArray(image)
-                                val simpleBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                                val simpleBitmap =
+                                    BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
                                 val rotationMatrix: Matrix = Matrix()
                                 rotationMatrix.postRotate(imageProxy.imageInfo.rotationDegrees.toFloat())
                                 val rotatedBitmap = Bitmap.createBitmap(

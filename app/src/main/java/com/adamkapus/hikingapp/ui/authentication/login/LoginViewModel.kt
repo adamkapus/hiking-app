@@ -90,7 +90,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    //ToDo LOGIN!
     private suspend fun login(emailAddress: String, password: String) = viewModelScope.launch {
         _uiState.update { _ -> LoginUiState.LoginInProgress }
         val response = authenticationInteractor.signIn(emailAddress, password)

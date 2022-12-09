@@ -90,7 +90,7 @@ class MapViewModel @Inject constructor(
     fun loadFlowerLocations() = viewModelScope.launch {
         val resp = flowerLocationInteractor.getFlowerLocations()
         when (resp) {
-            is InteractorError -> {//Todo Event post?
+            is InteractorError -> {
             }
             is InteractorResult -> {
                 val flowers = resp.result.map { it.toFlowerOnMap(flowerResolver) }
@@ -130,14 +130,6 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    //ToDo
-    fun onLocationPermissionsDenied() {
 
-    }
-
-    //ToDo
-    fun handledLocationPermissionsDenied() {
-
-    }
 
 }

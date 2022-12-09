@@ -26,6 +26,7 @@ import com.adamkapus.hikingapp.ui.map.model.FlowerOnMap
 import com.adamkapus.hikingapp.utils.FlowerRarity
 import com.adamkapus.hikingapp.utils.MapUtils
 import com.adamkapus.hikingapp.utils.hasLocationPermission
+import com.adamkapus.hikingapp.utils.showSnackbar
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -59,10 +60,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             )
 
 
-        private const val DEFAULT_LOCATION_LAT = 47.4733057775952
-        private const val DEFAULT_LOCATION_LNG = 19.059724793021967
-
-        private const val TAG = "PLS"
     }
 
     private val gpxFileRequest =
@@ -86,7 +83,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickL
             } else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 tryLoadingUserPosition()
             } else {
-                viewModel.onLocationPermissionsDenied()
+                showSnackbar(R.string.permission_location_submitting_reasoning)
             }
 
         }

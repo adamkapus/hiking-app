@@ -34,7 +34,6 @@ class CameraViewModel @Inject constructor(
     val uiState: StateFlow<CameraUIState> = _uiState.asStateFlow()
 
 
-    //ToDo error képernyő
     fun onRecognitionMade(newRecognitions: List<Recognition>) = viewModelScope.launch {
         if (_uiState.value is RecognitionFinished) {
             return@launch

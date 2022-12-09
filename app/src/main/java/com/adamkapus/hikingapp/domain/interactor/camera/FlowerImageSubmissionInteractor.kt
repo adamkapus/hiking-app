@@ -26,25 +26,21 @@ class FlowerImageSubmissionInteractor @Inject constructor(
         image: Bitmap?
     ): InteractorResponse<Unit> =
         withContext(Dispatchers.IO) {
+            if (image == null) {
+                return@withContext InteractorError
+            }
+
             val lastLoc = locationDataSource.getLastPosition()
             if (lastLoc is DataSourceError) {
-                Log.d("PLS", "NINCS LOKACIO!!")
                 return@withContext InteractorError
             }
             val location = (lastLoc as DataSourceResult).result
             val latitude = location?.latitude
             val longitude = location?.longitude
             if (latitude == null || longitude == null) {
-                Log.d("PLS", "NINCS LOKACIO mert null!!")
                 return@withContext InteractorError
             }
 
-
-            if (image == null) {
-                Log.d("PLS", "bitmap null")
-                return@withContext InteractorError
-            }
-            Log.d("PLS", "Interactorban es nem null")
             val imageUploadResponse = flowerImageDataSource.submitFlowerImage(image)
             if (imageUploadResponse is DataSourceError) {
                 return@withContext InteractorError
